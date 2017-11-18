@@ -8,7 +8,7 @@ OpenGLsetup::~OpenGLsetup()
 {
 }
 
-GLFWwindow * OpenGLsetup::CreateWindow(int Width, int Height, const char* WindowName)
+GLFWwindow* OpenGLsetup::CreateWindow(int Width, int Height, const char* WindowName)
 {
 	/*glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
@@ -25,11 +25,7 @@ void OpenGLsetup::CheckWindowWorking(GLFWwindow* window)
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Fail to Initialize GLEW\n");
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
+
 }
 
 void OpenGLsetup::BasicAntiAlasing()

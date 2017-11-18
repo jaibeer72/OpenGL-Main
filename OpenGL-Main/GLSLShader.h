@@ -6,12 +6,8 @@
 #include "OpenGL-Main.h"
 #include"Premitives2D.h"
 //#include<map>
-#include<iostream>
 #include<fstream>
 #include<algorithm>
-#include<map>
-#include<vector>
-#include<string>
 
 
 class GLSLShader

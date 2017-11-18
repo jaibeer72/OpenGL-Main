@@ -1,4 +1,3 @@
-#include<iostream>
 
 // Headers and the objs 
 #include"Premitives2D.h"
@@ -41,12 +40,17 @@ GLuint vboIndicesID;
 glm::mat4  P = glm::mat4(1); // projection Mat
 glm::mat4 MV = glm::mat4(1); // Model Mat
 
-int main() {
+void main() {
 	GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
   //GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
 	OGL.CheckWindowWorking(window); 
 	OGL.BasicAntiAlasing();
 	glfwMakeContextCurrent(window);
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Fail to Initialize GLEW\n");
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
 	//glfwSwapInterval(1);
 	
 	//start code here
@@ -76,7 +80,7 @@ int main() {
 	glGenBuffers(1, &vboVerticesID);
 	glGenBuffers(1, &vboIndicesID);
 	glBindVertexArray(vaoID);
-	GLsizei stride = sizeof(Vertex);
+	GLsizei stride = sizeof(glmVertex);
 	glBindBuffer(GL_ARRAY_BUFFER, vboVerticesID);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
 	glEnableVertexAttribArray(shader["vVertex"]);
