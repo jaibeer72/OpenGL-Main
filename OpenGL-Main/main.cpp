@@ -44,6 +44,7 @@ glm::mat4 MV = glm::mat4(1); // Model Mat
 
 int main() {
 	GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
+  //GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
 	OGL.CheckWindowWorking(window); 
 	OGL.BasicAntiAlasing();
 	glfwMakeContextCurrent(window);

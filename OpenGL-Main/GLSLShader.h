@@ -4,7 +4,8 @@
 
 #endif
 #include "OpenGL-Main.h"
-#include<map>
+#include"Premitives2D.h"
+//#include<map>
 #include<iostream>
 #include<fstream>
 #include<algorithm>

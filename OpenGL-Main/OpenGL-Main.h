@@ -1,7 +1,7 @@
 #pragma once
 #include"Premitives2D.h"	
-#include<string>
-#include<iostream>
+//#include<string>
+//#include<iostream>
 class OpenGLsetup
 {
 public:

@@ -1,0 +1,36 @@
+//frag Shader
+#version 330 core
+smooth in vec4 vSmoothColor;
+layout(location=0) out vec4 vFragColor;
+void main()
+{
+   vFragColor = vSmoothColor;
+}
+
+//Vert Shader
+
+#version 330 core
+layout(location = 0) in vec3 vVertex;
+layout(location = 1) in vec3 vColor;
+smooth out vec4 vSmoothColor;
+uniform mat4 MVP;
+void main()
+{
+   vSmoothColor = vec4(vColor,1);
+   gl_Position = MVP*vec4(vVertex,1);
+}
+
+// Triange Vertexes 
+vertices[0].color = glm::vec4(1, 0, 0,1);
+	vertices[1].color = glm::vec4(0, 1, 0,1);
+	vertices[2].color = glm::vec4(0, 0, 1,1);
+
+	vertices[0].position = glm::vec3(-1, -1, 0);
+	vertices[1].position = glm::vec3(0, 1, 0);
+	vertices[2].position = glm::vec3(1, -1, 0);
+
+	indices[0] = 0;
+	indices[1] = 1;
+	indices[2] = 2;
+
+

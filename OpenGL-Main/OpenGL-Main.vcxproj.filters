@@ -55,5 +55,8 @@
     <Text Include="Demos.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="ShaderBasedTriange.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>
