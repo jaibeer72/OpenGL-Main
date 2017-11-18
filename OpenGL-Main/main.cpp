@@ -3,23 +3,22 @@
 // Headers and the objs 
 #include"Premitives2D.h"
 #include"OpenGL-Main.h"
+#include"GLSLShader.h"
+
 
 #define _USE_MATH_DEFINES // M_PI constant
 #include<math.h>// This has to be declared after the define function NO CLUE WHy . 
 //objs
+
+
+
 OpenGLsetup OGL;
 Prem2D prem2D; 
-
+GLSLShader shader;
 //===============================
 // Demo Text Functions from the book 
 //---------------------------=------
-void drawPointsDemo(int width, int height);
-void gaussianDemo(float sigma);
-void draw2DHeatMap(const Data *data, int num_points);
-void draw2DscatterPlot(const Data *data, int num_points);
-void drawGrid(GLfloat width, GLfloat height, GLfloat grid_width); 
-void drawLineDemo(); 
-void drawOrigin();
+
 
 ///---------------------------------------------------------
 //-------------------------------
@@ -27,209 +26,92 @@ void drawOrigin();
 //---------------------------
 const int Window_Width=640*2;
 const int Window_Height=480;
-float sigma = 0.1f;
-float sign = 1.0f;
-float step_size = 0.01f;
-GLfloat alpha = 210.0f, beta = -70.0f, zoom = 2.0f;
-
+glmVertex vertices[3];
+GLushort indices[3];
+GLuint vaoID;
+GLuint vboVerticesID;
+GLuint vboIndicesID;
 
 ///------------------------------------------
 
-int main() {
-	GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name"); 
-	OGL.CheckWindowWorking(window); 
-	glfwMakeContextCurrent(window);
-	OGL.BasicAntiAlasing();
-	//start here 
-	float sigma = 0.1f;
-	float sign = 1.0f;
-	float step_size = 0.01f;
+//------------------------------------
+// Important matrixes
+//----------------------------
 
+glm::mat4  P = glm::mat4(1); // projection Mat
+glm::mat4 MV = glm::mat4(1); // Model Mat
+
+int main() {
+	GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
+	OGL.CheckWindowWorking(window); 
+	OGL.BasicAntiAlasing();
+	glfwMakeContextCurrent(window);
+	//glfwSwapInterval(1);
+	
+	//start code here
+	shader.LoadFromFile(GL_VERTEX_SHADER, "shader.vert");
+	shader.LoadFromFile(GL_FRAGMENT_SHADER, "shader.frag");
+	shader.CreateAndLinkProgram();
+	shader.Use();
+	shader.AddAttribute("vVertex");
+	shader.AddAttribute("vColor");
+	shader.AddUniform("MVP");
+	shader.UnUse();
+
+	//Triangle Coord
+	vertices[0].color = glm::vec3(1, 0, 0);
+	vertices[1].color = glm::vec3(0, 1, 0);
+	vertices[2].color = glm::vec3(0, 0, 1);
+
+	vertices[0].position = glm::vec3(-1, -1, 0);
+	vertices[1].position = glm::vec3(0, 1, 0);
+	vertices[2].position = glm::vec3(1, -1, 0);
+
+	indices[0] = 0;
+	indices[1] = 1;
+	indices[2] = 2;
+
+	glGenVertexArrays(1, &vaoID);
+	glGenBuffers(1, &vboVerticesID);
+	glGenBuffers(1, &vboIndicesID);
+	glBindVertexArray(vaoID);
+	GLsizei stride = sizeof(Vertex);
+	glBindBuffer(GL_ARRAY_BUFFER, vboVerticesID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(shader["vVertex"]);
+	glVertexAttribPointer(shader["vVertex"], 3, GL_FLOAT, GL_FALSE, stride, 0);
+	glEnableVertexAttribArray(shader["vColor"]);
+	glVertexAttribPointer(shader["vColor"], 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)offsetof(glmVertex, color));
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndicesID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
+	
 	while (!glfwWindowShouldClose(window))
 	{
-		//OGL.Ortho_Projection_Setup(window, Window_Width, Window_Height);
-		OGL.PrespectiveCamera_Setup(window, Window_Width, Window_Height); 
+		OGL.Ortho_Projection_Setup(window, Window_Width, Window_Height);
+		//OGL.PrespectiveCamera_Setup(window, Window_Width, Window_Height); 
 		
 		//--------------------------
 		// enter code here 
 		//------------------------
-		drawOrigin();
-		sigma = sigma + sign*step_size;
-		if (sigma>1.0f) {
-			sign = -1.0f;
-		}
-		if (sigma<0.1) {
-			sign = 1.0f;
-		}
-		gaussianDemo(sigma);
-
+		
+		shader.Use();
+		glUniformMatrix4fv(shader("MVP"), 1, GL_FALSE, glm::value_ptr(P*MV));
+		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_SHORT, 0);
+		shader.UnUse();
+	
 		//-----------------------------
 		//end code 
 		//------------------------------
 		glfwSwapBuffers(window);
 		glfwPollEvents();
 	}
+	shader.DeleteShaderProgram();
+	glDeleteBuffers(1, &vboVerticesID);
+	glDeleteBuffers(1, &vboIndicesID);
 	glfwDestroyWindow(window);
   glfwTerminate();
   exit(EXIT_SUCCESS);
 }
 
 
-//========================================
-//ALL THE DEMO FUNCTIONS FROM THE BOOK 
-//========================================
-void drawPointsDemo(int width, int height)
-{
-	GLfloat size = 5.0f;
-	for (GLfloat x = 0.0f; x <= 1.0f; x += 0.2f, size += 5)
-	{
-		Vertex v1 = { x, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-		prem2D.drawPoint(v1, size);
-	}
-}
-void gaussianDemo(float sigma) {
-	//construct a 1000x1000 grid
-	const int grid_x = 400;
-	const int grid_y = 400;
-	const int num_points = grid_x*grid_y;
-	Data *data = (Data*)malloc(sizeof(Data)*num_points);
-	int data_counter = 0;
-
-	//standard deviation
-	const float sigma2 = sigma*sigma;
-	//amplitude
-	const float sigma_const = 10.0f*(sigma2*2.0f*(float)M_PI);
-
-	for (float x = -grid_x / 2.0f; x<grid_x / 2.0f; x += 1.0f) {
-		for (float y = -grid_y / 2.0f; y<grid_y / 2.0f; y += 1.0f) {
-			float x_data = 2.0f*x / grid_x;
-			float y_data = 2.0f*y / grid_y;
-			//Set the mean to 0
-			float z_data = exp(-0.5f*(x_data*x_data) / (sigma2)-0.5f*(y_data*y_data) / (sigma2)) / sigma_const;
-			data[data_counter].x = x_data;
-			data[data_counter].y = y_data;
-			data[data_counter].z = z_data;
-			data_counter++;
-		}
-	}
-	draw2DHeatMap(data, num_points);
-	free(data);
-}
-void draw2DscatterPlot(const Data *data, int num_points) {
-	glPointSize(3.0f);
-	glBegin(GL_POINTS);
-	float transparency = 0.25f;
-	//locate the maximum and minimum values in the dataset
-	float max_value = -999.9f;
-	float min_value = 999.9f;
-	for (int i = 0; i<num_points; i++) {
-		Data d = data[i];
-		if (d.z > max_value)
-			max_value = d.z;
-		if (d.z < min_value)
-			min_value = d.z;
-	}
-	float halfmax = (max_value + min_value) / 2;
-	//display the result
-	for (int i = 0; i<num_points; i++) {
-		Data d = data[i];
-		float value = d.z;
-		float b = 1.0f - value / halfmax;
-		float r = value / halfmax - 1.0f;
-		if (b < 0)
-			b = 0;
-		if (r < 0)
-			r = 0;
-		float g = 1.0f - b - r;
-		glColor4f(r, g, b, transparency);
-		glVertex3f(d.x, d.y, d.z);
-	}
-	glEnd();
-}
-
-void drawGrid(GLfloat width, GLfloat height, GLfloat grid_width) {
-	//horizontal lines
-	for (float i = -height; i<height; i += grid_width) {
-		Vertex v1 = { -width, i, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-		Vertex v2 = { width, i, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-		prem2D.drawLineSegment(v1, v2,0.1f);
-	}
-	//vertical lines
-	for (float i = -width; i<width; i += grid_width) {
-		Vertex v1 = { i, -height, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-		Vertex v2 = { i, height, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f };
-		prem2D.drawLineSegment(v1, v2,0.1f);
-	}
-}
-void drawLineDemo() {
-	//draw a simple grid
-	drawGrid(5.0f, 1.0f, 0.1f);
-	//define the vertices and colors of the line segments
-	Vertex v1 = { -5.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.0f, 0.7f };
-	Vertex v2 = { 5.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f, 0.7f };
-	Vertex v3 = { 0.0f, 1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.7f };
-	Vertex v4 = { 0.0f, -1.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.7f };
-	//draw the line segments
-	prem2D.drawLineSegment(v1, v2, 10.0f);
-	prem2D.drawLineSegment(v3, v4, 10.0f);
-}
-
-void draw2DHeatMap(const Data *data, int num_points) {
-	//locate the maximum and minimum values in the dataset
-	float max_value = -999.9f;
-	float min_value = 999.9f;
-	for (int i = 0; i<num_points; i++) {
-		const Data d = data[i];
-		if (d.z > max_value) {
-			max_value = d.z;
-		}
-		if (d.z < min_value) {
-			min_value = d.z;
-		}
-	}
-	const float halfmax = (max_value + min_value) / 2;
-
-	//display the result
-	glPointSize(2.0f);
-	glBegin(GL_POINTS);
-	for (int i = 0; i<num_points; i++) {
-		const Data d = data[i];
-		float value = d.z;
-		float b = 1.0f - value / halfmax;
-		float r = value / halfmax - 1.0f;
-		if (b < 0) {
-			b = 0;
-		}
-		if (r < 0) {
-			r = 0;
-		}
-		float g = 1.0f - b - r;
-		glColor4f(r, g, b, 0.5f);
-		glVertex3f(d.x, d.y, d.z);
-	}
-	glEnd();
-}
-void drawOrigin() {
-	glLineWidth(4.0f);
-	glBegin(GL_LINES);
-	float transparency = 0.5f;
-
-	//draw a red line for the x-axis
-	glColor4f(1.0f, 0.0f, 0.0f, transparency);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glColor4f(1.0f, 0.0f, 0.0f, transparency);
-	glVertex3f(0.3f, 0.0f, 0.0f);
-
-	//draw a green line for the y-axis
-	glColor4f(0.0f, 1.0f, 0.0f, transparency);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glColor4f(0.0f, 1.0f, 0.0f, transparency);
-	glVertex3f(0.0f, 0.0f, 0.3f);
-
-	//draw a blue line for the z-axis
-	glColor4f(0.0f, 0.0f, 1.0f, transparency);
-	glVertex3f(0.0f, 0.0f, 0.0f);
-	glColor4f(0.0f, 0.0f, 1.0f, transparency);
-	glVertex3f(0.0f, 0.3f, 0.0f);
-	glEnd();
-}

@@ -10,6 +10,10 @@ OpenGLsetup::~OpenGLsetup()
 
 GLFWwindow * OpenGLsetup::CreateWindow(int Width, int Height, const char* WindowName)
 {
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	if (!glfwInit())exit(EXIT_FAILURE);
 	GLFWwindow* window = glfwCreateWindow(Width, Height, WindowName, NULL, NULL);
 	return window;
@@ -18,6 +22,11 @@ GLFWwindow * OpenGLsetup::CreateWindow(int Width, int Height, const char* Window
 void OpenGLsetup::CheckWindowWorking(GLFWwindow* window)
 {
 	if (!window) {
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Fail to Initialize GLEW\n");
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
