@@ -25,11 +25,6 @@ void OpenGLsetup::CheckWindowWorking(GLFWwindow* window)
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Fail to Initialize GLEW\n");
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
 }
 
 void OpenGLsetup::BasicAntiAlasing()
