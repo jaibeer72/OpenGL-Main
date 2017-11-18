@@ -24,9 +24,9 @@ GLSLShader shader;
 //-------------------------------
 //Global Variables
 //---------------------------
-const int Window_Width=640;
+const int Window_Width=640*2;
 const int Window_Height=480;
-Vertex vertices[3];
+glmVertex vertices[3];
 GLushort indices[3];
 GLuint vaoID;
 GLuint vboVerticesID;
@@ -41,18 +41,12 @@ GLuint vboIndicesID;
 glm::mat4  P = glm::mat4(1); // projection Mat
 glm::mat4 MV = glm::mat4(1); // Model Mat
 
-
 int main() {
 	GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
   //GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
 	OGL.CheckWindowWorking(window); 
 	OGL.BasicAntiAlasing();
 	glfwMakeContextCurrent(window);
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Fail to Initialize GLEW\n");
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
 	//glfwSwapInterval(1);
 	
 	//start code here
@@ -66,9 +60,9 @@ int main() {
 	shader.UnUse();
 
 	//Triangle Coord
-	vertices[0].color = glm::vec4(1, 0, 0,1);
-	vertices[1].color = glm::vec4(0, 1, 0,1);
-	vertices[2].color = glm::vec4(0, 0, 1,1);
+	vertices[0].color = glm::vec3(1, 0, 0);
+	vertices[1].color = glm::vec3(0, 1, 0);
+	vertices[2].color = glm::vec3(0, 0, 1);
 
 	vertices[0].position = glm::vec3(-1, -1, 0);
 	vertices[1].position = glm::vec3(0, 1, 0);
@@ -88,7 +82,7 @@ int main() {
 	glEnableVertexAttribArray(shader["vVertex"]);
 	glVertexAttribPointer(shader["vVertex"], 3, GL_FLOAT, GL_FALSE, stride, 0);
 	glEnableVertexAttribArray(shader["vColor"]);
-	glVertexAttribPointer(shader["vColor"], 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)offsetof(Vertex, color));
+	glVertexAttribPointer(shader["vColor"], 3, GL_FLOAT, GL_FALSE, stride, (const GLvoid*)offsetof(glmVertex, color));
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndicesID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
@@ -96,7 +90,6 @@ int main() {
 	while (!glfwWindowShouldClose(window))
 	{
 		OGL.Ortho_Projection_Setup(window, Window_Width, Window_Height);
-		P= glm::ortho(-1, 1, -1, 1);
 		//OGL.PrespectiveCamera_Setup(window, Window_Width, Window_Height); 
 		
 		//--------------------------
@@ -121,6 +114,5 @@ int main() {
   glfwTerminate();
   exit(EXIT_SUCCESS);
 }
-
 
 

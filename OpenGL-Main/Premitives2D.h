@@ -11,17 +11,17 @@
 #include<glm\gtc\matrix_transform.hpp>
 #include<glm\gtc\type_ptr.hpp>
 
-typedef struct Vertex
+typedef struct glmVertex
 {
 	glm::vec3 position;
-	glm::vec4 color;
+	glm::vec3 color;
 };
 
-//typedef struct Vertex
-//{
-//	GLfloat x, y, z; //position
-//	GLfloat r, g, b, a; //color and alpha channels
-//};
+typedef struct Vertex
+{
+	GLfloat x, y, z; //position
+	GLfloat r, g, b, a; //color and alpha channels
+};
 typedef struct Data {
 	GLfloat x, y, z; 
 };
