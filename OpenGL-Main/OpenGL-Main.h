@@ -1,5 +1,5 @@
 #pragma once
-#include"Premitives2D.h"
+#include"Premitives2D.h"	
 #include<string>
 #include<iostream>
 class OpenGLsetup
@@ -14,6 +14,7 @@ public:
 	//Smoothining things up I will learn the Math later.
 	void BasicAntiAlasing();
 	GLFWwindow* Ortho_Projection_Setup(GLFWwindow* window,int width,int height);
+	GLFWwindow* PrespectiveCamera_Setup(GLFWwindow*, int width, int height);
 private:
 
 };
