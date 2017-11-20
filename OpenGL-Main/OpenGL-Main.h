@@ -20,5 +20,5 @@ public:
 	GLFWwindow* Ortho_Projection_Setup(GLFWwindow* window,int width,int height);
 	GLFWwindow* PrespectiveCamera_Setup(GLFWwindow*, int width, int height);
 private:
-
+	static GLFWwindow* framebuffer_size_callback(GLFWwindow* window, int width, int height);
 };

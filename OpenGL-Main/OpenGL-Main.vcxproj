@@ -120,6 +120,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AbstractCamera.cpp" />
     <ClCompile Include="GLSLShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OpenGL-Main.cpp" />
@@ -127,6 +128,7 @@
     <ClCompile Include="Premitives3D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AbstractCamera.h" />
     <ClInclude Include="GLSLShader.h" />
     <ClInclude Include="OpenGL-Main.h" />
     <ClInclude Include="Premitives2D.h" />
