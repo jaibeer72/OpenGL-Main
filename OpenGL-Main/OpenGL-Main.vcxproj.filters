@@ -50,6 +50,12 @@
     <None Include="shader.frag">
       <Filter>shaders</Filter>
     </None>
+    <None Include="rippleMesh.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="rippleMesh.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Demos.txt">

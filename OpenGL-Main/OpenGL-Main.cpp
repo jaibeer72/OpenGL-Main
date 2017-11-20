@@ -66,7 +66,7 @@ GLFWwindow * OpenGLsetup::PrespectiveCamera_Setup(GLFWwindow *window, int width,
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	const double DEG2RAD = 3.14159265 / 180;
+	const double DEG2RAD = M_PI / 180;
   // tangent of half fovY
   double tangent = tan(fovY/2 * DEG2RAD);  
   // half height of near plane
