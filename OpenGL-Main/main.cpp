@@ -4,9 +4,7 @@
 #include"OpenGL-Main.h"
 #include"GLSLShader.h"
 #include"Premitives3D.h"
-//#include"AbstractCamera.h"
-#define _USE_MATH_DEFINES // M_PI constant
-#include<math.h>// This has to be declared after the define function NO CLUE WHy . 
+
 
 #define _USE_MATH_DEFINES // M_PI constant
 #include<math.h>// This has to be declared after the define function NO CLUE WHy . 
@@ -23,10 +21,6 @@ Premitives3D prem3D;
 // Demo Text Functions from the book 
 //---------------------------=------
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-void cursor_position_callback(GLFWwindow* window, double x, double y);
-void scroll_callback(GLFWwindow* window, double x, double y);
 
 ///---------------------------------------------------------
 //-------------------------------
@@ -34,15 +28,23 @@ void scroll_callback(GLFWwindow* window, double x, double y);
 //---------------------------
 const int Window_Width=1000;
 const int Window_Height=1000;
-
 //glmVertex vertices[3];
 GLuint vaoID;
 GLuint vboVerticesID;
 GLuint vboIndicesID;
-GLboolean locked = GL_FALSE;
-GLfloat alpha = 210.0f, beta = -70.0f, zoom = 2.0f;
-bool freeze = true;
-float cursorX, cursorY; 
+
+const float SPEED = 2;
+float time = 0;
+const int NUM_X = 40;
+const int NUM_Z = 40;
+glm::vec3 vertices[(NUM_X + 1)*(NUM_Z + 1)];
+const int TOTAL_INDICES = NUM_X*NUM_Z * 2 * 3;
+GLushort indices[TOTAL_INDICES];
+float rX = 25, rY = -40, dist = -7;
+const float SIZE_X = 4; //size of plane in world space
+const float SIZE_Z = 4;
+const float HALF_SIZE_X = SIZE_X / 2.0f;
+const float HALF_SIZE_Z = SIZE_Z / 2.0f;
 
 ///------------------------------------------
 //------------------------------------
@@ -69,18 +71,7 @@ void main() {
 	
 	//start code here
 	
-	//keyboard input callback
-	glfwSetKeyCallback(window, key_callback);
 
-
-	//mouse button callback
-	glfwSetMouseButtonCallback(window, mouse_button_callback);
-
-	//mouse movement callback
-	glfwSetCursorPosCallback(window, cursor_position_callback);
-
-	//mouse scroll callback
-	glfwSetScrollCallback(window, scroll_callback);
 	
 	
 	while (!glfwWindowShouldClose(window))
@@ -95,6 +86,7 @@ void main() {
 		//glViewport(0, 0, (GLsizei)Window_Width, (GLsizei)Window_Height);
 		//prem2D.drawTriangle(vertices[0], vertices[1], vertices[2]);
 		prem3D.drawReppleMesh(5, 5); 
+		
 		//-----------------------------
 		//end code 
 		//------------------------------
@@ -109,68 +101,4 @@ void main() {
   exit(EXIT_SUCCESS);
 }
 
-void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
-{
-	if (action != GLFW_PRESS)
-		return;
-	switch (key)
-	{
-	case GLFW_KEY_ESCAPE:
-		glfwSetWindowShouldClose(window, GL_TRUE);
-		break;
-	case GLFW_KEY_SPACE:
-		freeze = !freeze;
-		break;
-	case GLFW_KEY_LEFT:
-		alpha += 5.0f;
-		break;
-	case GLFW_KEY_RIGHT:
-		alpha -= 5.0f;
-		break;
-	case GLFW_KEY_UP:
-		beta -= 5.0f;
-		break;
-	case GLFW_KEY_DOWN:
-		beta += 5.0f;
-		break;
-	case GLFW_KEY_PAGE_UP:
-		zoom -= 0.25f;
-		if (zoom < 0.0f)
-			zoom = 0.0f;
-		break;
-	case GLFW_KEY_PAGE_DOWN:
-		zoom += 0.25f;
-		break;
-	default:
-		break;
-	}
-}
 
-void mouse_button_callback(GLFWwindow * window, int button, int action, int mods)
-{
-	if (button != GLFW_MOUSE_BUTTON_LEFT)
-		return;
-	if (action == GLFW_PRESS)
-	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-		locked = GL_TRUE;
-	}
-	else
-	{
-		locked = GL_FALSE;
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-	}
-}
-
-void cursor_position_callback(GLFWwindow * window, double x, double y)
-{
-	//if the mouse button is pressed
-	if (locked)
-	{
-		alpha += (GLfloat)(x - cursorX) / 10.0f;
-		beta += (GLfloat)(y - cursorY) / 10.0f;
-	}
-	//update the cursor position
-	cursorX = (int)x;
-	cursorY = (int)y;
-}
