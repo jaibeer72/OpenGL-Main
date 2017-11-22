@@ -4,7 +4,9 @@
 #include"OpenGL-Main.h"
 #include"GLSLShader.h"
 #include"Premitives3D.h"
-
+//#include"AbstractCamera.h"
+#define _USE_MATH_DEFINES // M_PI constant
+#include<math.h>// This has to be declared after the define function NO CLUE WHy . 
 
 #define _USE_MATH_DEFINES // M_PI constant
 #include<math.h>// This has to be declared after the define function NO CLUE WHy . 
@@ -39,6 +41,8 @@ GLuint vboVerticesID;
 GLuint vboIndicesID;
 GLboolean locked = GL_FALSE;
 GLfloat alpha = 210.0f, beta = -70.0f, zoom = 2.0f;
+bool freeze = true;
+float cursorX, cursorY; 
 
 ///------------------------------------------
 //------------------------------------
@@ -64,7 +68,7 @@ void main() {
 	//glfwSwapInterval(1);
 	
 	//start code here
-	Vertex vert; 
+	
 	//keyboard input callback
 	glfwSetKeyCallback(window, key_callback);
 
@@ -77,8 +81,6 @@ void main() {
 
 	//mouse scroll callback
 	glfwSetScrollCallback(window, scroll_callback);
-	
-
 	
 	
 	while (!glfwWindowShouldClose(window))

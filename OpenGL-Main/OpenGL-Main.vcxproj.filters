@@ -33,9 +33,6 @@
     <ClCompile Include="Premitives3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AbstractCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Premitives2D.h">
@@ -50,7 +47,7 @@
     <ClInclude Include="Premitives3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AbstractCamera.h">
+    <ClInclude Include="GLbheavior.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
