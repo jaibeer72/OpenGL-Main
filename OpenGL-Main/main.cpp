@@ -1,4 +1,3 @@
-
 // Headers and the objs 
 #include"Premitives2D.h"
 #include"OpenGL-Main.h"
@@ -55,6 +54,9 @@ glm::mat4  P = glm::mat4(1); // projection Mat
 glm::mat4 MV = glm::mat4(1); // Model Mat
 
 
+
+
+
 void main() {
 	GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
   //GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
@@ -62,11 +64,7 @@ void main() {
 	OGL.CheckWindowWorking(window); 
 	OGL.BasicAntiAlasing();
 	glfwMakeContextCurrent(window);
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Fail to Initialize GLEW\n");
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
+	
 	//glfwSwapInterval(1);
 	
 	//start code here
@@ -78,15 +76,13 @@ void main() {
 	{
 		OGL.Ortho_Projection_Setup(window, Window_Width, Window_Height);
 		
-		//OGL.PrespectiveCamera_Setup(window, Window_Width, Window_Height); 
-		
+		//OGL.PrespectiveCamera_Setup(window, Window_Width, Window_Height); 	
 		//--------------------------
 		// enter code here 
 		//------------------------
 		//glViewport(0, 0, (GLsizei)Window_Width, (GLsizei)Window_Height);
 		//prem2D.drawTriangle(vertices[0], vertices[1], vertices[2]);
 		prem3D.drawReppleMesh(5, 5); 
-		
 		//-----------------------------
 		//end code 
 		//------------------------------

@@ -48,7 +48,7 @@ GLFWwindow* OpenGLsetup::Ortho_Projection_Setup(GLFWwindow * window, int width, 
 	glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	return window;
 }
 
