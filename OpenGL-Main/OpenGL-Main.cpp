@@ -54,7 +54,6 @@ GLFWwindow* OpenGLsetup::Ortho_Projection_Setup(GLFWwindow * window, int width, 
 
 GLFWwindow * OpenGLsetup::PrespectiveCamera_Setup(GLFWwindow *window, int width, int height)
 {
-	//glfwCreateWindow()
 	
 	glfwGetFramebufferSize(window, &width, &height);
 	const float fovY = 45.0f;
