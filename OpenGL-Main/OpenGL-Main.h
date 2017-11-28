@@ -1,9 +1,5 @@
 #pragma once
 #include"Premitives2D.h"	
-
-#define _USE_MATH_DEFINES // M_PI constant
-#include<math.h>// This has to be declared after the define function NO CLUE WHy . 
-//objs
 //#include<string>
 //#include<iostream>
 class OpenGLsetup
