@@ -83,6 +83,7 @@ void main() {
 		//glViewport(0, 0, (GLsizei)Window_Width, (GLsizei)Window_Height);
 		//prem2D.drawTriangle(vertices[0], vertices[1], vertices[2]);
 		prem3D.drawReppleMesh(5, 5); 
+		
 		//-----------------------------
 		//end code 
 		//------------------------------
