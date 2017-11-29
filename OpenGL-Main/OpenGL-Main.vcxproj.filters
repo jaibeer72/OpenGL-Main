@@ -33,7 +33,10 @@
     <ClCompile Include="Premitives3D.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="AbstractCamera.cpp">
+    <ClCompile Include="CAbstractCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CFreeCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +53,10 @@
     <ClInclude Include="Premitives3D.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="AbstractCamera.h">
+    <ClInclude Include="CAbstractCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CFreeCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -66,6 +72,9 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="rippleMesh.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader.geom">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

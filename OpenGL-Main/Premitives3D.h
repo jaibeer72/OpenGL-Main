@@ -7,6 +7,7 @@ class Premitives3D
 {
 public:
 	//variables 
+	
 	GLuint vaoID;
 	GLuint vboVerticesID;
 	GLuint vboIndicesID;
@@ -14,12 +15,14 @@ public:
 	~Premitives3D();
 	void drawReppleMesh(int NUM_X, int NUM_Z);
 	void deleteBufferObjs();
+	void drawPlain(glm::vec3 vertices[],int LOD);
 
 private: 
 	//------------------------
 	// Shader Binders
 	//----------------------------
 	static GLSLShader bindMeshToShader(const int SIZE_X, const int SIZE_Z);
+	static void bindPlainToShader(glm::vec3 vertices[], int LOD);
 	//------------------------------------
 	// Important matrixes
 	//----------------------------

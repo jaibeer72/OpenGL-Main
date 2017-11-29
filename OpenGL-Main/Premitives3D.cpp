@@ -1,7 +1,7 @@
 #include "Premitives3D.h"
 #include"Premitives2D.h"
 
-
+float rX = 25, rY = -40, dist = -35;
 
 Premitives3D::Premitives3D()
 {
@@ -9,12 +9,18 @@ Premitives3D::Premitives3D()
 
 
 Premitives3D::~Premitives3D()
-{
+{	
+	GLSLShader shader;
+	shader.DeleteShaderProgram();
+	glDeleteBuffers(1, &vboVerticesID);
+	glDeleteBuffers(1, &vboIndicesID);
+	glDeleteVertexArrays(1, &vaoID);
 }
 
 void Premitives3D::drawReppleMesh(const int SIZE_X,const int SIZE_Z)
 {
-	const float SPEED = 2;
+
+	const float SPEED = 500.0f;
 	float time = 0;
 	const int NUM_X = 40; 
 	const int NUM_Z = 40; 
@@ -30,7 +36,7 @@ void Premitives3D::drawReppleMesh(const int SIZE_X,const int SIZE_Z)
 	
 	
 	P = glm::perspective(45.0f, (GLfloat)640 / 480, 1.f, 1000.f);
-	time = glfwGetTime() / 1000.0f * 500.0f;
+	time = glfwGetTime() / 1000.0f * SPEED;
 	glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, dist));
 	glm::mat4 Rx = glm::rotate(T, rX, glm::vec3(1.0f, 0.0f, 0.0f));
 	glm::mat4 MV = glm::rotate(Rx, rY, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -45,6 +51,33 @@ void Premitives3D::deleteBufferObjs()
 {
 	glDeleteBuffers(1, &vboVerticesID);
 	glDeleteBuffers(1, &vboIndicesID);
+}
+
+void Premitives3D::drawPlain(glm::vec3 vertices[],int sub_divisions)
+{
+	bindPlainToShader(vertices, sub_divisions);
+	GLSLShader shader;
+	glm::mat4 T = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, dist));
+	glm::mat4 Rx = glm::rotate(T, rX, glm::vec3(1.0f, 0.0f, 0.0f));
+	glm::mat4 MV = glm::rotate(Rx, rY, glm::vec3(0.0f, 1.0f, 0.0f));
+	MV = glm::translate(MV, glm::vec3(-5, 0, -5));
+	shader.Use();
+	glUniform1i(shader("sub_divisions"), sub_divisions);
+	glUniformMatrix4fv(shader("MVP"), 1, GL_FALSE, glm::value_ptr(P*MV));
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+
+	MV = glm::translate(MV, glm::vec3(10, 0, 0));
+	glUniformMatrix4fv(shader("MVP"), 1, GL_FALSE, glm::value_ptr(P*MV));
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+
+	MV = glm::translate(MV, glm::vec3(0, 0, 10));
+	glUniformMatrix4fv(shader("MVP"), 1, GL_FALSE, glm::value_ptr(P*MV));
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+
+	MV = glm::translate(MV, glm::vec3(-10, 0, 0));
+	glUniformMatrix4fv(shader("MVP"), 1, GL_FALSE, glm::value_ptr(P*MV));
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_SHORT, 0);
+	shader.UnUse();
 }
 
 GLSLShader Premitives3D::bindMeshToShader(const int SIZE_X, const int SIZE_Z)
@@ -111,4 +144,47 @@ GLSLShader Premitives3D::bindMeshToShader(const int SIZE_X, const int SIZE_Z)
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndicesID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
 	return shader;
+}
+
+void Premitives3D::bindPlainToShader(glm::vec3 vertices[],int sub_divisions)
+{
+	GLuint vaoID;
+	GLuint vboVerticesID;
+	GLuint vboIndicesID;
+	GLSLShader shader;
+	GLushort indices[6];
+	shader.LoadFromFile(GL_VERTEX_SHADER, "shader.vert");
+	shader.LoadFromFile(GL_GEOMETRY_SHADER, "shader.geom");
+	shader.LoadFromFile(GL_FRAGMENT_SHADER, "shader.frag");
+	shader.CreateAndLinkProgram();
+	shader.Use();
+	shader.AddAttribute("vVertex");
+	shader.AddUniform("MVP");
+	shader.AddUniform("sub_divisions");
+	glUniform1i(shader("sub_divisions"), sub_divisions);
+	shader.UnUse();
+	vertices[0] = glm::vec3(-5, 0, -5);
+	vertices[1] = glm::vec3(-5, 0, 5);
+	vertices[2] = glm::vec3(5, 0, 5);
+	vertices[3] = glm::vec3(5, 0, -5);
+	GLushort* id = &indices[0];
+
+	*id++ = 0;
+	*id++ = 1;
+	*id++ = 2;
+	*id++ = 0;
+	*id++ = 2;
+	*id++ = 3;
+
+	glGenVertexArrays(1, &vaoID);
+	glGenBuffers(1, &vboVerticesID);
+	glGenBuffers(1, &vboIndicesID);
+	glBindVertexArray(vaoID);
+	glBindBuffer(GL_ARRAY_BUFFER, vboVerticesID);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), &vertices[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(shader["vVertex"]);
+	glVertexAttribPointer(shader["vVertex"], 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndicesID);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices[0], GL_STATIC_DRAW);
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }

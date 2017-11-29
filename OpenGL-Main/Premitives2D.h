@@ -10,6 +10,9 @@
 #include<glm\glm.hpp>
 #include<glm\gtc\matrix_transform.hpp>
 #include<glm\gtc\type_ptr.hpp>
+#include<glm\gtx\euler_angles.hpp>
+
+#include<SOIL.h>
 
 #include"GLSLShader.h"
 
@@ -51,6 +54,4 @@ private:
 
 	glm::mat4  P = glm::mat4(1); // projection Mat
 	glm::mat4 MV = glm::mat4(1); // Model Mat
-
-
 };

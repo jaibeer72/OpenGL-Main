@@ -25,7 +25,13 @@ void OpenGLsetup::CheckWindowWorking(GLFWwindow* window)
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
+	glfwMakeContextCurrent(window);
 
+	if (glewInit() != GLEW_OK) {
+		fprintf(stderr, "Fail to Initialize GLEW\n");
+		glfwTerminate();
+		exit(EXIT_FAILURE);
+	}
 }
 
 void OpenGLsetup::BasicAntiAlasing()
@@ -54,13 +60,11 @@ GLFWwindow* OpenGLsetup::Ortho_Projection_Setup(GLFWwindow * window, int width, 
 
 GLFWwindow * OpenGLsetup::PrespectiveCamera_Setup(GLFWwindow *window, int width, int height)
 {
-	const float fovY = 45.0f;
-	const float front = 0.1f;
-	const float back = 128.0f;
+
 	GLfloat alpha = 210.0f, beta = -70.0f, zoom = 2.0f;
 	static GLFWwindow* win = framebuffer_size_callback(window, width, height);
 	window = win; 
-	glfwGetFramebufferSize(window, &width, &height);
+	
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glTranslatef(0.0, 0.0, -2.0);
@@ -75,6 +79,11 @@ GLFWwindow * OpenGLsetup::PrespectiveCamera_Setup(GLFWwindow *window, int width,
 
 GLFWwindow * OpenGLsetup::framebuffer_size_callback(GLFWwindow * window, int width, int height)
 {
+	glfwGetFramebufferSize(window, &width, &height);
+	const float fovY = 45.0f;
+	const float front = 0.1f;
+	const float back = 128.0f;
+	
 	float ratio = 1.0f;
 	if (height > 0)
 		ratio = (float)width / (float)height;

@@ -9,6 +9,7 @@
 class OpenGLsetup
 {
 public:
+	
 	OpenGLsetup();
 	~OpenGLsetup();
 	//Creates Window 

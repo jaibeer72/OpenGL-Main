@@ -2,9 +2,9 @@
 layout(location=0) in vec3 vVertex;
 uniform mat4 MVP;
 uniform float time;
-const float amplitude = 0.125;
-const float frequency = 4;
-const float PI = 3.14159;
+const float amplitude = 1;
+const float frequency = 1;
+const float PI = 1;
 void main()
 { 
   float distance = length(vVertex);
