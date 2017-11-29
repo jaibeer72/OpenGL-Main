@@ -48,7 +48,7 @@ GLFWwindow* OpenGLsetup::Ortho_Projection_Setup(GLFWwindow * window, int width, 
 	glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-   // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	return window;
 }
 
@@ -66,7 +66,7 @@ GLFWwindow * OpenGLsetup::PrespectiveCamera_Setup(GLFWwindow *window, int width,
 	glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	const double DEG2RAD = 3.14159265 / 180;
+	const double DEG2RAD = M_PI / 180;
   // tangent of half fovY
   double tangent = tan(fovY/2 * DEG2RAD);  
   // half height of near plane
