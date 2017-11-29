@@ -1,5 +1,6 @@
 #pragma once
 #include"Premitives2D.h"
+#include"CPlane.h"
 
 class CAbstractCamera
 {

@@ -4,7 +4,6 @@
 #include"OpenGL-Main.h"
 #include"GLSLShader.h"
 #include"Premitives3D.h"
-#include""
 
 #define _USE_MATH_DEFINES // M_PI constant
 #include<math.h>// This has to be declared after the define function NO CLUE WHy . 
@@ -23,9 +22,6 @@ Premitives3D prem3D;
 //---------------------------=------
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void mouse_button_callback(GLFWwindow* window, int button, int action, int mods);
-void cursor_position_callback(GLFWwindow* window, double x, double y);
-void scroll_callback(GLFWwindow* window, double x, double y);
 
 ///---------------------------------------------------------
 //-------------------------------
