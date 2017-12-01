@@ -61,7 +61,7 @@ bool useFiltering = true;
 //for floating point imprecision
 const float EPSILON = 0.001f;
 const float EPSILON2 = EPSILON*EPSILON;
-
+double mouse_sensitivity = 0.5;
 //camera tranformation variables
 int state = 0, oldX = 0, oldY = 0;
 float rX = 0, rY = 0, fov = 45;
@@ -97,7 +97,7 @@ void main() {
 	glewInit();
 	// Keycallbacks
 	glfwSetKeyCallback(window, key_callback); 
-	glfwSetMouseButtonCallback(window, mouse_buttom_callback);
+	//glfwSetMouseButtonCallback(window, mouse_buttom_callback);
 	glfwSetCursorPosCallback(window, cursor_position_callback);
 	int width, height;
 	glfwGetFramebufferSize(window, &width, &height);
@@ -110,20 +110,7 @@ void main() {
 	while (!glfwWindowShouldClose(window))
 	{
 		
-		
-		//glTranslatef(0.0, 0.0, -2.0);
-		//OGL.Ortho_Projection_Setup(window, Window_Width, Window_Height);
-		
-		//OGL.PrespectiveCamera_Setup(window, Window_Width, Window_Height); 
-		
-		//--------------------------
-		// enter code here 
-		//------------------------
-		//glViewport(0, 0, (GLsizei)Window_Width, (GLsizei)Window_Height);
-		//prem2D.drawTriangle(vertices[0], vertices[1], vertices[2]);
-		//prem3D.drawPlain(vertices, 1);
-		//prem3D.drawReppleMesh(5, 5); 
-		
+		glfwPollEvents();
 		last_time = current_time;
 		current_time = glfwGetTime()/ 1000.0f*1500.0f;
 		dt = current_time - last_time;
@@ -144,7 +131,7 @@ void main() {
 		//end code 
 		//------------------------------
 		glfwSwapBuffers(window);
-		glfwPollEvents();
+		
 	}
 	shader.DeleteShaderProgram();
 	delete checker_plane;
@@ -156,10 +143,11 @@ void main() {
 
 void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
 {
-	if (action == GLFW_PRESS) {
+	if (GLFW_PRESS==true) {
 
 		switch (key)
 		{
+			
 		case GLFW_KEY_ESCAPE:
 			glfwSetWindowShouldClose(window, GL_TRUE);
 			break;
@@ -190,69 +178,19 @@ void key_callback(GLFWwindow * window, int key, int scancode, int action, int mo
 	}
 }
 
-void filterMouseMoves(float dx, float dy)
-{
-	for (int i = MOUSE_HISTORY_BUFFER_SIZE - 1; i > 0; --i)
-	{
-		mouseHistory[i] = mouseHistory[i - 1]; 
-	}
-	mouseHistory[0] = glm::vec2(dx, dy); 
-	
-	float averageX = 0.0f;
-	float averageY = 0.0f;
-	float averageTotal = 0.0f;
-	float currentWeight = 1.0f;
 
-	// Filter the mouse.
-	for (int i = 0; i < MOUSE_HISTORY_BUFFER_SIZE; ++i)
-	{
-		glm::vec2 tmp = mouseHistory[i];
-		averageX += tmp.x * currentWeight;
-		averageY += tmp.y * currentWeight;
-		averageTotal += 1.0f * currentWeight;
-		currentWeight *= MOUSE_FILTER_WEIGHT;
-	}
 
-	mouseX = averageX / averageTotal;
-	mouseY = averageY / averageTotal;
-}
-
-void mouse_buttom_callback(GLFWwindow * window, int button, int action, int mods)
-{
-	if (action == GLFW_PRESS&& button==GLFW_MOUSE_BUTTON_MIDDLE)
-	{
-		state = 0;
-	}
-	else
-		state = 1;
-}
 
 void cursor_position_callback(GLFWwindow * window, double xpos, double ypos)
 {
-	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-	if (state == 0) {
-		oldX = xpos;
-		oldY = ypos;
-		fov += (ypos - oldY) / 5.0f;
-		cam.SetupProjection(fov, cam.GetAspectRatio());
-		std::cout << "State is 0";
-	}
-	
- else {
-	/* rY += (ypos - oldY) / 5.0f;
-	 rX += (oldX - xpos) / 5.0f;
-	 std::cout << "State is 1";
-	 if (useFiltering)
-		 filterMouseMoves(rX, rY);*/
-	// else {
-		 mouseX = -xpos;
-		 mouseY = ypos;
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+
+		 mouseX = -xpos*mouse_sensitivity;
+		 mouseY = ypos*mouse_sensitivity;
 	 //}
 	 cam.Rotate(mouseX, mouseY, 0);
  }
- oldX = xpos;
- oldY = ypos;
-}
+
 
 
 void OnInit() {

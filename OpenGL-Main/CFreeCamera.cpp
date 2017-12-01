@@ -12,8 +12,9 @@ CFreeCamera::~CFreeCamera(void)
 }
 
 void CFreeCamera::Update() {
-	glm::mat4 R = glm::yawPitchRoll(yaw, pitch, roll);
 	position += translation;
+	glm::mat4 R = glm::yawPitchRoll(yaw, pitch, roll);
+	
 
 	//set this when no movement decay is needed
 	//translation=glm::vec3(0); 
