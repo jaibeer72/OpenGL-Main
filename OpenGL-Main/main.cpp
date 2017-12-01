@@ -33,10 +33,9 @@ void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void OnInit();
 void framebuffer_size_callback(GLFWwindow * window, int width, int height)
 {
-	float ratio;
-	if (height > 0)
-		ratio = (float)width / (float)height;
 	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
 	cam.SetupProjection(45, (GLfloat)width / height);
 	
 }
@@ -126,7 +125,7 @@ void main() {
 		//prem3D.drawReppleMesh(5, 5); 
 		
 		last_time = current_time;
-		current_time = glfwGetTime()/ 1000.0f*500.0f;
+		current_time = glfwGetTime()/ 1000.0f*1500.0f;
 		dt = current_time - last_time;
 
 		//clear color buffer and depth buffer
@@ -157,7 +156,8 @@ void main() {
 
 void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
 {
-	if (GLFW_PRESS == true) {
+	if (action == GLFW_PRESS) {
+
 		switch (key)
 		{
 		case GLFW_KEY_ESCAPE:
@@ -183,9 +183,10 @@ void key_callback(GLFWwindow * window, int key, int scancode, int action, int mo
 			break;
 		}
 	}
-	glm::vec3 t = cam.GetTranslation();
-	if (glm::dot(t, t)>EPSILON2) {
-		cam.SetTranslation(t*0.95f);
+		glm::vec3 t = cam.GetTranslation();
+		if (glm::dot(t, t) > EPSILON2) {
+			cam.SetTranslation(t*0.95f);
+		
 	}
 }
 
@@ -228,22 +229,25 @@ void mouse_buttom_callback(GLFWwindow * window, int button, int action, int mods
 
 void cursor_position_callback(GLFWwindow * window, double xpos, double ypos)
 {
+	//glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	if (state == 0) {
 		oldX = xpos;
 		oldY = ypos;
 		fov += (ypos - oldY) / 5.0f;
 		cam.SetupProjection(fov, cam.GetAspectRatio());
+		std::cout << "State is 0";
 	}
 	
  else {
-	 rY += (ypos - oldY) / 5.0f;
+	/* rY += (ypos - oldY) / 5.0f;
 	 rX += (oldX - xpos) / 5.0f;
+	 std::cout << "State is 1";
 	 if (useFiltering)
-		 filterMouseMoves(rX, rY);
-	 else {
-		 mouseX = rX;
-		 mouseY = rY;
-	 }
+		 filterMouseMoves(rX, rY);*/
+	// else {
+		 mouseX = -xpos;
+		 mouseY = ypos;
+	 //}
 	 cam.Rotate(mouseX, mouseY, 0);
  }
  oldX = xpos;

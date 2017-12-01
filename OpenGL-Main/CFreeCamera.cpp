@@ -25,15 +25,6 @@ void CFreeCamera::Update() {
 
 	glm::vec3 tgt = position + look;
 	V = glm::lookAt(position, tgt, up);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glTranslatef(translation.x, translation.y, translation.z);
-	// rotate by beta degrees around the x-axis
-	glRotatef(yaw, 1.0, 0.0, 0.0);
-	// Pitch 
-	glRotatef(pitch, 0.0, 1.0, 0.0);
-	// rotate by alpha degrees around the z-axis
-	glRotatef(roll, 0.0, 0.0, 1.0);
 	std::cout <<"x"<< position.x<<"y"<<position.y<<"\n";
 }
 
