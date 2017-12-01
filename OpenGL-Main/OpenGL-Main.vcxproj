@@ -123,22 +123,26 @@
     <ClCompile Include="CAbstractCamera.cpp" />
     <ClCompile Include="CFreeCamera.cpp" />
     <ClCompile Include="CPlane.cpp" />
+    <ClCompile Include="CTexturedPlane.cpp" />
     <ClCompile Include="GLSLShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OpenGL-Main.cpp" />
     <ClCompile Include="Premitives2D.cpp" />
-    <ClCompile Include="Premitives3D.cpp" />
+    <ClCompile Include="RenderableObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CAbstractCamera.h" />
     <ClInclude Include="CFreeCamera.h" />
     <ClInclude Include="CPlane.h" />
+    <ClInclude Include="CTexturedPlane.h" />
     <ClInclude Include="GLSLShader.h" />
     <ClInclude Include="OpenGL-Main.h" />
     <ClInclude Include="Premitives2D.h" />
-    <ClInclude Include="Premitives3D.h" />
+    <ClInclude Include="RenderableObject.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="checker_shader.frag" />
+    <None Include="checker_shader.vert" />
     <None Include="packages.config" />
     <None Include="rippleMesh.frag" />
     <None Include="rippleMesh.vert" />

@@ -43,7 +43,8 @@ const float CAbstractCamera::GetFOV() const {
 } 
 void CAbstractCamera::SetFOV(const float fovInDegrees) {
 	fov = fovInDegrees;
-	P = glm::perspective(fovInDegrees, aspect_ratio, Znear, Zfar); 
+	P = glm::perspective(fovInDegrees, aspect_ratio, Znear, Zfar);
+
 }
 const float CAbstractCamera::GetAspectRatio() const {
 	return aspect_ratio;

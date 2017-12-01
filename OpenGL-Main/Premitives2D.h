@@ -1,20 +1,6 @@
 #pragma once
-#include<GL\glew.h>
-#include <GLFW\glfw3.h>
-#include<iostream>
+#include"OpenGL-Main.h"
 
-#include<string>
-#include<map>
-#include<vector>
-//GLM
-#include<glm\glm.hpp>
-#include<glm\gtc\matrix_transform.hpp>
-#include<glm\gtc\type_ptr.hpp>
-#include<glm\gtx\euler_angles.hpp>
-
-#include<SOIL.h>
-
-#include"GLSLShader.h"
 
 typedef struct glmVertex
 {

@@ -30,9 +30,6 @@
     <ClCompile Include="GLSLShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Premitives3D.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="CAbstractCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -40,6 +37,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CPlane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexturedPlane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -53,9 +56,6 @@
     <ClInclude Include="GLSLShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Premitives3D.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="CAbstractCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -63,6 +63,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="CPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTexturedPlane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -81,6 +87,12 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shader.geom">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="checker_shader.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="checker_shader.vert">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
