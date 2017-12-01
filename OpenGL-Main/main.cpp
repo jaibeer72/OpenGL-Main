@@ -5,6 +5,7 @@
 //#include"Premitives3D.h"
 #include"CFreeCamera.h"
 #include"CTexturedPlane.h"
+#include"TerrainLoading.h"
 
 #define _USE_MATH_DEFINES // M_PI constant
 #include<math.h>// This has to be declared after the define function NO CLUE WHy . 
@@ -20,14 +21,14 @@ CFreeCamera cam;
 //When using multyple of the same kind of class :P 
 //YAY pointers finally 
 
-CTexturedPlane* checker_plane; 
+CTexturedPlane* checker_plane;
+TerrainLoading* Terrain; 
 
 //===============================
 // Function Declaration
 //---------------------------=------
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
-void filterMouseMoves(float dx, float dy);
 void mouse_buttom_callback(GLFWwindow* window, int button, int action, int mods);
 void cursor_position_callback(GLFWwindow* window, double xpos, double ypos);
 void OnInit();
@@ -54,6 +55,8 @@ float mouseX = 0, mouseY = 0;
 //flag to enable filtering
 bool useFiltering = true;
 
+
+const std::string filename = "heightMap.jpg";
 // Camera Rotation Values
 //GLfloat alpha = 210.0f, beta = -70.0f, zoom = 2.0f;
 
@@ -74,7 +77,7 @@ float last_time = 0, current_time = 0;
 
 
 // Texture Variable 
-GLuint checkerTextureID; 
+GLuint heightMapTextureID;
 
 ///------------------------------------------
 //------------------------------------
@@ -88,7 +91,7 @@ glm::mat4 MV = glm::mat4(1); // Model Mat
 void main() {
 	GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
   //GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	
 	OGL.CheckWindowWorking(window); 
 	OGL.BasicAntiAlasing();
 	//glfwSwapInterval(1);
@@ -107,6 +110,7 @@ void main() {
 	
 	OnInit();
 	//glm::vec3 vertices[4];
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	while (!glfwWindowShouldClose(window))
 	{
 		
@@ -125,7 +129,8 @@ void main() {
 		glm::mat4 MVP = P*MV;
 
 		//render the chekered plane
-		checker_plane->Render(glm::value_ptr(MVP));
+		//checker_plane->Render(glm::value_ptr(MVP));
+		Terrain->Render(glm::value_ptr(MVP));
 
 		//-----------------------------
 		//end code 
@@ -135,7 +140,7 @@ void main() {
 	}
 	shader.DeleteShaderProgram();
 	delete checker_plane;
-	glDeleteTextures(1, &checkerTextureID);
+	glDeleteTextures(1, &heightMapTextureID);
 	glfwDestroyWindow(window);
   glfwTerminate();
   exit(EXIT_SUCCESS);
@@ -196,45 +201,55 @@ void cursor_position_callback(GLFWwindow * window, double xpos, double ypos)
 void OnInit() {
 	GL_CHECK_ERRORS
 		//generate the checker texture
-		GLubyte data[128][128] = { 0 };
-	for (int j = 0; j<128; j++) {
+	/*	GLubyte data[128][128] = { 0 };
+	for (int j = 0; j<128; j++) {         Use this logic to generate noise maps :D 
 		for (int i = 0; i<128; i++) {
 			data[i][j] = (i <= 64 && j <= 64 || i>64 && j>64) ? 255 : 0;
 		}
+	}*/
+		Terrain = new TerrainLoading();
+		int texture_width = 0, texture_height = 0, channels = 0;
+	GLubyte* pData = SOIL_load_image(filename.c_str(), &texture_width, &texture_height, &channels, SOIL_LOAD_L);
+
+	//vertically flip the heightmap image on Y axis since it is inverted 
+	for (int j = 0; j * 2 < texture_height; ++j)
+	{
+		int index1 = j * texture_width;
+		int index2 = (texture_height - 1 - j) * texture_width;
+		for (int i = texture_width; i > 0; --i)
+		{
+			GLubyte temp = pData[index1];
+			pData[index1] = pData[index2];
+			pData[index2] = temp;
+			++index1;
+			++index2;
+		}
 	}
-	//generate texture object
-	glGenTextures(1, &checkerTextureID);
+	
+	//setup OpenGL texture
+	glGenTextures(1, &heightMapTextureID);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, checkerTextureID);
-	//set texture parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glBindTexture(GL_TEXTURE_2D, heightMapTextureID);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, texture_width, texture_height, 0, GL_RED, GL_UNSIGNED_BYTE, pData);
+
+	//free SOIL image data
+	SOIL_free_image_data(pData);
 
 	GL_CHECK_ERRORS
 
-		//set maximum aniostropy setting
-		GLfloat largest_supported_anisotropy;
-	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &largest_supported_anisotropy);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, largest_supported_anisotropy);
-
-	//set mipmap base and max level
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 4);
-
-	//allocate texture object
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, 128, 128, 0, GL_RED, GL_UNSIGNED_BYTE, data);
-
-	//generate mipmaps
-	glGenerateMipmap(GL_TEXTURE_2D);
+		//set polygon mode to draw lines
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	GL_CHECK_ERRORS
-
-		//create a textured plane object
-		checker_plane = new CTexturedPlane();
-
-	GL_CHECK_ERRORS
+		
+		//SOIL_free_image_data(pData);
+	
+	//set polygon mode to draw lines
+	
 
 		//setup camera
 		//setup the camera position and look direction
@@ -243,15 +258,15 @@ void OnInit() {
 	glm::vec3 look = glm::normalize(p);
 
 	//rotate the camera for proper orientation
-	float yaw = glm::degrees(float(atan2(look.z, look.x) + M_PI));
-	float pitch = glm::degrees(asin(look.y));
-	rX = yaw;
-	rY = pitch;
-	if (useFiltering) {
-		for (int i = 0; i < MOUSE_HISTORY_BUFFER_SIZE; ++i) {
-			mouseHistory[i] = glm::vec2(rX, rY);
-		}
-	}
-	cam.Rotate(rX, rY, 0);
+	//float yaw = glm::degrees(float(atan2(look.z, look.x) + M_PI));
+	//float pitch = glm::degrees(asin(look.y));
+	//rX = yaw;
+	//rY = pitch;
+	//if (useFiltering) {
+	//	for (int i = 0; i < MOUSE_HISTORY_BUFFER_SIZE; ++i) {
+	//		mouseHistory[i] = glm::vec2(rX, rY);
+	//	}
+	//}
+	//cam.Rotate(rX, rY, 0);
 	std::cout << "Initialization successfull" << std::endl;
 }

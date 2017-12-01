@@ -45,6 +45,12 @@
     <ClCompile Include="CTexturedPlane.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="TerrainLoading.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Premitives2D.h">
@@ -71,6 +77,12 @@
     <ClInclude Include="CTexturedPlane.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TerrainLoading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -95,6 +107,12 @@
     <None Include="checker_shader.vert">
       <Filter>shaders</Filter>
     </None>
+    <None Include="Tarrain.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="Tarrain.vert">
+      <Filter>shaders</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Text Include="Demos.txt">
@@ -103,5 +121,10 @@
     <Text Include="ShaderBasedTriange.txt">
       <Filter>Resource Files</Filter>
     </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\..\..\Downloads\heightMap.jpg">
+      <Filter>Resource Files</Filter>
+    </Image>
   </ItemGroup>
 </Project>
