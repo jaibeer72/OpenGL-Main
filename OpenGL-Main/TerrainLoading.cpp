@@ -13,6 +13,7 @@ TerrainLoading::TerrainLoading(const int w, const int d)
 	shader.Use();
 	//add attributes and uniforms
 	shader.AddAttribute("vVertex");
+	shader.AddAttribute("vColor");
 	shader.AddUniform("heightMapTexture");
 	shader.AddUniform("scale");
 	shader.AddUniform("half_scale");

@@ -1,9 +1,14 @@
 #pragma once
 #include "RenderableObject.h"
+struct Vertex {
+	glm::vec3 position;
+	glm::vec3 color;
+};
 class TerrainLoading :
 	public RenderableObject
 {
 public:
+	
 	TerrainLoading(const int width = 512, const int depth = 512);
 	virtual ~TerrainLoading();
 	int GetTotalVertices();
