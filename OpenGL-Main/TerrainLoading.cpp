@@ -18,6 +18,8 @@ TerrainLoading::TerrainLoading(const int w, const int d)
 	shader.AddUniform("half_scale");
 	shader.AddUniform("HALF_TERRAIN_SIZE");
 	shader.AddUniform("MVP");
+	shader.AddUniform("vColor");
+	//glUniform3fv(shader("vColor"), 1, color);
 	//set values of constant uniforms as initialization	
 	glUniform1i(shader("heightMapTexture"), 0);
 	glUniform2i(shader("HALF_TERRAIN_SIZE"),w>>1,d>>1);
@@ -35,12 +37,12 @@ TerrainLoading::~TerrainLoading()
 int TerrainLoading::GetTotalVertices()
 {
 	
-	return (width*depth);
+	return (2*(width*depth));
 }
 
 int TerrainLoading::GetTotalIndices()
 {
-	return (width*depth*2*3);
+	return (2*(width*depth*2*3));
 }
 
 GLenum TerrainLoading::GetPrimitiveType()
@@ -67,8 +69,10 @@ void TerrainLoading::FillVertexBuffer(GLfloat * pBuffer)
 			float x = ((float(i)) / (width - 1))*(width/2);
 			float z = (float(j)) / (depth - 1)*(depth/2);
 			float y = 2*NG.GetNoise(x, z);
+			AllOFY[count] = y; 
 			vertices[count] = glm::vec3(x,y,z);
 			count++;
+			//color = getColor(y);
 		}
 	}
 }
@@ -93,8 +97,36 @@ void TerrainLoading::FillIndexBuffer(GLuint * pBuffer)
 	}
 }
 
+void TerrainLoading::FillColorBuffer(GLfloat * pBuffer)
+{
+	glm::vec3* color = (glm::vec3*)(pBuffer);
+	int i = 0;
+	while (i>depth*width)
+	{
+		if (AllOFY[i]<0 && AllOFY[i]>0.5) {
+			color[i] = glm::vec3(0.5, 0.3, 0.3);
+		}
+		else
+		{
+			color[i] = glm::vec3(1.0, 1.0, 1.0);
+		}
+	}
+}
+
 void TerrainLoading::SetCustomUniforms()
 {
+	glUniform3fv(shader("vColor"), 1, glm::value_ptr(color));
+}
 
+glm::vec3 TerrainLoading::getColor(float y)
+{
+	if (y > 0 && y < 0.5) {
+		return glm::vec3(1.0,0.5,0.6);
+	}
+	else
+	{
+		return glm::vec3(1.0, 1.0, 1.0);
+	}
+	
 }
 

@@ -1,5 +1,9 @@
 #include "RenderableObject.h"
 
+typedef struct Vertex {
+	GLfloat* pBuffer;
+	GLfloat* pCBuffer;
+};
 
 
 RenderableObject::RenderableObject(void)
@@ -25,6 +29,7 @@ void RenderableObject::Render(const float * MVP)
 }
 
 void RenderableObject::Init() {
+	Vertex v;
 	//setup vao and vbo stuff
 	glGenVertexArrays(1, &vaoID);
 	glGenBuffers(1, &vboVerticesID);
@@ -39,14 +44,20 @@ void RenderableObject::Init() {
 	glBindVertexArray(vaoID);
 
 	glBindBuffer(GL_ARRAY_BUFFER, vboVerticesID);
-	glBufferData(GL_ARRAY_BUFFER, totalVertices * sizeof(glm::vec3), 0, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, totalVertices * sizeof(glm::vec3*), 0, GL_STATIC_DRAW);
 
-	GLfloat* pBuffer = static_cast<GLfloat*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
-	FillVertexBuffer(pBuffer);
+	v.pBuffer = static_cast<GLfloat*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+	FillVertexBuffer(v.pBuffer);
+	v.pCBuffer = static_cast<GLfloat*>(glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY));
+	FillColorBuffer(v.pCBuffer);
 	glUnmapBuffer(GL_ARRAY_BUFFER);
 
 	glEnableVertexAttribArray(shader["vVertex"]);
-	glVertexAttribPointer(shader["vVertex"], 3, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(shader["vVertex"], 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
+
+	glEnableVertexAttribArray(shader["vColor"]);
+	glVertexAttribPointer(shader["vColor"], 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (const GLvoid*)offsetof(Vertex, pCBuffer));
+
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vboIndicesID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalIndices * sizeof(GLuint), 0, GL_STATIC_DRAW);
