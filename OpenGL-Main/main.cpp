@@ -45,8 +45,8 @@ void framebuffer_size_callback(GLFWwindow * window, int width, int height)
 //-------------------------------
 //Global Variables
 //---------------------------
-const int Window_Width=1000;
-const int Window_Height=1000;
+const int Window_Width=1920;
+const int Window_Height=1080;
 const float MOUSE_FILTER_WEIGHT = 0.75f;
 const int MOUSE_HISTORY_BUFFER_SIZE = 10;// ill figure this later
 glm::vec2 mouseHistory[MOUSE_HISTORY_BUFFER_SIZE];
@@ -111,6 +111,7 @@ void main() {
 	OnInit();
 	//glm::vec3 vertices[4];
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glLineWidth(5.0f);
 	while (!glfwWindowShouldClose(window))
 	{
 		
@@ -212,43 +213,9 @@ void OnInit() {
 	GLubyte* pData = SOIL_load_image(filename.c_str(), &texture_width, &texture_height, &channels, SOIL_LOAD_L);
 
 	//vertically flip the heightmap image on Y axis since it is inverted 
-	for (int j = 0; j * 2 < texture_height; ++j)
-	{
-		int index1 = j * texture_width;
-		int index2 = (texture_height - 1 - j) * texture_width;
-		for (int i = texture_width; i > 0; --i)
-		{
-			GLubyte temp = pData[index1];
-			pData[index1] = pData[index2];
-			pData[index2] = temp;
-			++index1;
-			++index2;
-		}
-	}
 	
 	//setup OpenGL texture
-	glGenTextures(1, &heightMapTextureID);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, heightMapTextureID);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RED, texture_width, texture_height, 0, GL_RED, GL_UNSIGNED_BYTE, pData);
-
-	//free SOIL image data
-	SOIL_free_image_data(pData);
-
-	GL_CHECK_ERRORS
-
-		//set polygon mode to draw lines
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-	GL_CHECK_ERRORS
-		
-		//SOIL_free_image_data(pData);
 	
-	//set polygon mode to draw lines
 	
 
 		//setup camera

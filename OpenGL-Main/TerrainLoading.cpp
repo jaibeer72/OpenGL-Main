@@ -52,12 +52,12 @@ void TerrainLoading::FillVertexBuffer(GLfloat * pBuffer)
 {
 	//PerlinNoise p(230);
 	FastNoise NG;
-	NG.SetNoiseType(FastNoise::Perlin);
-	NG.SetSeed(500);
-	NG.SetFractalOctaves(10);
-	NG.SetFrequency(0.5);
-	NG.SetFractalLacunarity(5.0);
-
+	NG.SetNoiseType(FastNoise::PerlinFractal);
+	//NG.SetSeed(500);
+	NG.SetFractalOctaves(2);
+	NG.SetFrequency(0.01);
+	NG.SetFractalLacunarity(10.0);
+	
 	glm::vec3* vertices = (glm::vec3*)(pBuffer);
 	//setup vertices 
 	int count = 0;
@@ -66,9 +66,12 @@ void TerrainLoading::FillVertexBuffer(GLfloat * pBuffer)
 		for (int i = 0; i<width; i++) {
 			float x = ((float(i)) / (width - 1))*(width/2);
 			float z = (float(j)) / (depth - 1)*(depth/2);
-			float y = 2*NG.GetNoise(x, z);
+			
+			float y =20*NG.GetNoise(x, z);
+			
 			vertices[count] = glm::vec3(x,y,z);
 			count++;
+			//std::cout << "Y CORD OF PLAIN :- " << y << "\n";
 		}
 	}
 }
