@@ -242,7 +242,7 @@ void OnInit() {
 	//GL_CHECK_ERRORS
 
 		//set polygon mode to draw lines
-		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 	GL_CHECK_ERRORS
 		
