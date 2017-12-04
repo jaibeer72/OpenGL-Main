@@ -1,9 +1,11 @@
 #pragma once
 #include "RenderableObject.h"
+#include "FastNoise.h"
 class TerrainLoading :
 	public RenderableObject
 {
 public:
+	 
 	TerrainLoading(const int width = 512, const int depth = 512);
 	virtual ~TerrainLoading();
 	int GetTotalVertices();
@@ -16,7 +18,7 @@ public:
 private:
 	int width, depth;
 	const int TOTAL = (width*depth);
-	
+	int seed = 237;
 	float scale = 50;
 	float half_scale = scale / 2.0f;
 	const int HALF_WIDTH = width/2;

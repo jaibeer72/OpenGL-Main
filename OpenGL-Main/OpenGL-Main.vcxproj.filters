@@ -51,6 +51,12 @@
     <ClCompile Include="PerlinNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\Desktop\WT Class Code\css\Perlin_Noise\ppm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Premitives2D.h">
@@ -81,6 +87,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="PerlinNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\WT Class Code\css\Perlin_Noise\ppm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
