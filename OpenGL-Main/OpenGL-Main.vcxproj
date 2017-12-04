@@ -129,10 +129,8 @@
     <ClCompile Include="GLSLShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OpenGL-Main.cpp" />
-    <ClCompile Include="PerlinNoise.cpp" />
     <ClCompile Include="Premitives2D.cpp" />
     <ClCompile Include="RenderableObject.cpp" />
-    <ClCompile Include="TerrainLoading.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\Desktop\WT Class Code\css\Perlin_Noise\ppm.h" />
@@ -143,10 +141,8 @@
     <ClInclude Include="FastNoise.h" />
     <ClInclude Include="GLSLShader.h" />
     <ClInclude Include="OpenGL-Main.h" />
-    <ClInclude Include="PerlinNoise.h" />
     <ClInclude Include="Premitives2D.h" />
     <ClInclude Include="RenderableObject.h" />
-    <ClInclude Include="TerrainLoading.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="checker_shader.frag" />
@@ -157,15 +153,10 @@
     <None Include="shader.frag" />
     <None Include="shader.geom" />
     <None Include="shader.vert" />
-    <None Include="Tarrain.frag" />
-    <None Include="Tarrain.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Demos.txt" />
     <Text Include="ShaderBasedTriange.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\..\Downloads\heightMap.jpg" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
