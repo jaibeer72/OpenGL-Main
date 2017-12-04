@@ -1,6 +1,5 @@
 #pragma once
 #include"GLSLShader.h"
-#include"OpenGL-Main.h"
 
 class RenderableObject
 {

@@ -26,7 +26,7 @@ void CFreeCamera::Update() {
 
 	glm::vec3 tgt = position + look;
 	V = glm::lookAt(position, tgt, up);
-	std::cout << "cam x " << position.x << "cam y " << position.y << "\n";
+	std::cout <<"x"<< position.x<<"y"<<position.y<<"\n";
 }
 
 
