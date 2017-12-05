@@ -12,6 +12,7 @@
 
 class GLSLShader
 {
+	//this should work 
 public:
 	GLSLShader(void);
 	~GLSLShader(void);
