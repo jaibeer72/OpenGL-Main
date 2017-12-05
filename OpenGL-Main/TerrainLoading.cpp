@@ -1,9 +1,12 @@
 #include "TerrainLoading.h"
-
-TerrainLoading::TerrainLoading(const int w, const int d)
+#include"CFreeCamera.h"
+CFreeCamera cam1;
+TerrainLoading::TerrainLoading(const int w, const int d,float x, float y)
 {
 	width = w;
 	depth = d;
+	xPos = x;
+	yPos=y;
 
 	shader.LoadFromFile(GL_VERTEX_SHADER, "Tarrain.vert");
 	shader.LoadFromFile(GL_FRAGMENT_SHADER, "Tarrain.frag");
@@ -45,7 +48,8 @@ int TerrainLoading::GetTotalIndices()
 
 GLenum TerrainLoading::GetPrimitiveType()
 {
-	return GL_TRIANGLES;
+	glLineWidth(5.0f);
+	return GL_LINES;
 }
 
 void TerrainLoading::FillVertexBuffer(GLfloat * pBuffer)
@@ -57,23 +61,30 @@ void TerrainLoading::FillVertexBuffer(GLfloat * pBuffer)
 	NG.SetFractalOctaves(2);
 	NG.SetFrequency(0.01);
 	NG.SetFractalLacunarity(10.0);
-	
+	float x;
+	float z;
+	float y;
 	glm::vec3* vertices = (glm::vec3*)(pBuffer);
 	//setup vertices 
 	int count = 0;
 	//fill terrain vertices
+	//glm::vec3 trans = cam1.GetPosition();
 	for (int j = 0; j<depth; j++) {
 		for (int i = 0; i<width; i++) {
-			float x = ((float(i)) / (width - 1))*(width/2);
-			float z = (float(j)) / (depth - 1)*(depth/2);
+			x = ((float(i)) / (width - 1))*(width/2);
+			z = (float(j)) / (depth - 1)*(depth/2);
 			
-			float y =20*NG.GetNoise(x, z);
+			y =20*NG.GetNoise(x, z);
 			
-			vertices[count] = glm::vec3(x,y,z);
+			vertices[count] = glm::vec3(x-(xPos+(width/4)),y,z-(yPos+(depth/4)));
 			count++;
+			if (i == 0 && j == 0) {
+				SetMin(glm::vec2(x - (xPos + (width / 4)), z - (yPos + (depth / 4))));
+			}
 			//std::cout << "Y CORD OF PLAIN :- " << y << "\n";
 		}
 	}
+	SetMax(glm::vec2(x - (xPos + (width / 4)), z - (yPos + (depth / 4)))); 
 }
 
 void TerrainLoading::FillIndexBuffer(GLuint * pBuffer)
@@ -99,5 +110,30 @@ void TerrainLoading::FillIndexBuffer(GLuint * pBuffer)
 void TerrainLoading::SetCustomUniforms()
 {
 
+}
+
+void TerrainLoading::SetMax(glm::vec2 trans)
+{
+	max = trans;
+}
+
+glm::vec2 TerrainLoading::Getmax()
+{
+	return glm::vec2(max);
+}
+
+void TerrainLoading::SetMin(glm::vec2 trans)
+{
+	min = trans;
+}
+
+glm::vec2 TerrainLoading::GetMin()
+{
+	return glm::vec2(min);
+}
+
+glm::vec2 TerrainLoading::getCamPos(glm::vec2 camPos)
+{
+	return glm::vec2(camPos);
 }
 

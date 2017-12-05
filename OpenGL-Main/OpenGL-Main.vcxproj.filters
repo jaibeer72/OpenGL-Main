@@ -57,6 +57,9 @@
     <ClCompile Include="FastNoise.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CSkybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Premitives2D.h">
@@ -95,6 +98,9 @@
     <ClInclude Include="FastNoise.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CSkybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -123,6 +129,12 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="Tarrain.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="skybox.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="skybox.frag">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>

@@ -6,6 +6,7 @@
 #include"CFreeCamera.h"
 #include"CTexturedPlane.h"
 #include"TerrainLoading.h"
+#include"CSkybox.h"
 
 #define _USE_MATH_DEFINES // M_PI constant
 #include<math.h>// This has to be declared after the define function NO CLUE WHy . 
@@ -15,15 +16,18 @@
 
 OpenGLsetup OGL;
 GLSLShader shader;
+CSkybox* skybox;
 //Premitives3D prem3D;
 CFreeCamera cam; 
-
+TerrainLoading* Terrain;
 //When using multyple of the same kind of class :P 
 //YAY pointers finally 
 
 CTexturedPlane* checker_plane;
-TerrainLoading* Terrain; 
 
+bool created = false; 
+bool isRendered = false; 
+GLuint skyboxTextureID;
 //===============================
 // Function Declaration
 //---------------------------=------
@@ -45,18 +49,23 @@ void framebuffer_size_callback(GLFWwindow * window, int width, int height)
 //-------------------------------
 //Global Variables
 //---------------------------
-const int Window_Width=1920;
-const int Window_Height=1080;
+const int Window_Width=500;
+const int Window_Height=500;
 const float MOUSE_FILTER_WEIGHT = 0.75f;
 const int MOUSE_HISTORY_BUFFER_SIZE = 10;// ill figure this later
 glm::vec2 mouseHistory[MOUSE_HISTORY_BUFFER_SIZE];
 float mouseX = 0, mouseY = 0;
-
+const int T_width = 100;
+const int T_depth = 100;
 //flag to enable filtering
 bool useFiltering = true;
-
-
-const std::string filename = "heightMap.jpg";
+const char* texture_names[6] = { "skybox/posx.png",
+"skybox/negx.png", 
+"skybox/posy.png", 
+"skybox/negy.png", 
+"skybox/posz.png", 
+"skybox/negz.png", };
+//mouse click handler
 // Camera Rotation Values
 //GLfloat alpha = 210.0f, beta = -70.0f, zoom = 2.0f;
 
@@ -77,7 +86,7 @@ float last_time = 0, current_time = 0;
 
 
 // Texture Variable 
-GLuint heightMapTextureID;
+
 
 ///------------------------------------------
 //------------------------------------
@@ -87,7 +96,7 @@ GLuint heightMapTextureID;
 glm::mat4  P = glm::mat4(1); // projection Mat
 glm::mat4 MV = glm::mat4(1); // Model Mat
 
-
+void renderManager(glm::mat4 MVP);
 void main() {
 	GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
   //GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
@@ -110,7 +119,7 @@ void main() {
 	
 	OnInit();
 	//glm::vec3 vertices[4];
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 	glLineWidth(5.0f);
 	while (!glfwWindowShouldClose(window))
 	{
@@ -128,20 +137,21 @@ void main() {
 		glm::mat4 MV = cam.GetViewMatrix();
 		glm::mat4 P = cam.GetProjectionMatrix();
 		glm::mat4 MVP = P*MV;
-
+		glm::mat4 S = glm::scale(glm::mat4(1), glm::vec3(1000.0));
+		glm::mat4 MVPS = P*MV*S;
+		renderManager(MVP);
+		skybox->Render(glm::value_ptr(MVPS));
 		//render the chekered plane
 		//checker_plane->Render(glm::value_ptr(MVP));
-		Terrain->Render(glm::value_ptr(MVP));
-
+		//Terrain->Render(glm::value_ptr(MVP));
 		//-----------------------------
 		//end code 
 		//------------------------------
 		glfwSwapBuffers(window);
 		
 	}
-	shader.DeleteShaderProgram();
-	delete checker_plane;
-	glDeleteTextures(1, &heightMapTextureID);
+	shader.DeleteShaderProgram();;
+	glDeleteTextures(1, &skyboxTextureID);
 	glfwDestroyWindow(window);
   glfwTerminate();
   exit(EXIT_SUCCESS);
@@ -201,29 +211,69 @@ void cursor_position_callback(GLFWwindow * window, double xpos, double ypos)
 
 void OnInit() {
 	GL_CHECK_ERRORS
-		//generate the checker texture
-	/*	GLubyte data[128][128] = { 0 };
-	for (int j = 0; j<128; j++) {         Use this logic to generate noise maps :D 
-		for (int i = 0; i<128; i++) {
-			data[i][j] = (i <= 64 && j <= 64 || i>64 && j>64) ? 255 : 0;
-		}
-	}*/
-		Terrain = new TerrainLoading();
-		int texture_width = 0, texture_height = 0, channels = 0;
-	GLubyte* pData = SOIL_load_image(filename.c_str(), &texture_width, &texture_height, &channels, SOIL_LOAD_L);
+		glEnable(GL_DEPTH_TEST);
+	glEnable(GL_CULL_FACE);
 
-	//vertically flip the heightmap image on Y axis since it is inverted 
-	
-	//setup OpenGL texture
-	
-	
+	GL_CHECK_ERRORS
+
+		//generate a new Skybox
+		skybox = new CSkybox();
+
+	GL_CHECK_ERRORS
+
+		//load skybox textures using SOIL
+		int texture_widths[6];
+	int texture_heights[6];
+	int channels[6];
+	GLubyte* pData[6];
+
+	std::cout << "Loading skybox images: ..." << std::endl;
+	for (int i = 0; i<6; i++) {
+		std::cout << "\tLoading: " << texture_names[i] << " ... ";
+		pData[i] = SOIL_load_image(texture_names[i], &texture_widths[i], &texture_heights[i], &channels[i], SOIL_LOAD_AUTO);
+		std::cout << "done." << std::endl;
+	}
+
+	GL_CHECK_ERRORS
+
+		//generate OpenGL texture
+		glGenTextures(1, &skyboxTextureID);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, skyboxTextureID);
+
+	GL_CHECK_ERRORS
+		//set texture parameters
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	//glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	// glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	GL_CHECK_ERRORS
+
+		//set the image format
+		GLint format = (channels[0] == 4) ? GL_RGBA : GL_RGB;
+	//load the 6 images
+	for (int i = 0; i<6; i++) {
+		//allocate cubemap data
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, format, texture_widths[i], texture_heights[i], 0, format, GL_UNSIGNED_BYTE, pData[i]);
+
+		//free SOIL image data
+		SOIL_free_image_data(pData[i]);
+	}
+
 
 		//setup camera
 		//setup the camera position and look direction
-		glm::vec3 p = glm::vec3(5);
+		glm::vec3 p = glm::vec3(5.0,10.0,1.0);
 	cam.SetPosition(p);
 	glm::vec3 look = glm::normalize(p);
-
+	//glm::vec3 trans = cam.GetPosition();
+	//Terrain = new TerrainLoading(T_width, T_depth, trans.x, trans.z);
+	
 	//rotate the camera for proper orientation
 	//float yaw = glm::degrees(float(atan2(look.z, look.x) + M_PI));
 	//float pitch = glm::degrees(asin(look.y));
@@ -237,3 +287,43 @@ void OnInit() {
 	//cam.Rotate(rX, rY, 0);
 	std::cout << "Initialization successfull" << std::endl;
 }
+
+glm::vec2 max;
+glm::vec2 min;
+glm::vec3 trans;
+void renderManager(glm::mat4 MVP)
+{
+	  
+	
+	trans = cam.GetPosition();
+	if (created == false) {
+		
+		Terrain = new TerrainLoading(T_width, T_depth, trans.x, trans.z);
+		// creating bounds 
+		 max= Terrain->Getmax();
+		 min = Terrain->GetMin(); 
+		created = true;
+		std::cout << "is created\n ";
+	}
+	if (created == true) {
+		
+			Terrain->Render(glm::value_ptr(MVP));
+			std::cout << "is Rendered\n ";
+			
+	
+			// checking camera bounds to the plain 
+			if ((trans.x <min.x) || (trans.x > max.x) || (trans.z > max.y) || (trans.z < min.y)) {
+
+				//TerrainLoading* Tchunk2 = new TerrainLoading(T_width, T_depth, trans.x, trans.z);
+				Terrain->Destroy(); 
+				delete Terrain;
+				std::cout << "is Destroyed\n";
+				//Terrain = Tchunk2;
+				//std::cout << "is replaced";
+				created = false; 
+				
+			}
+		}
+	
+}
+	

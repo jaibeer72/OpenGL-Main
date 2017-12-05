@@ -138,5 +138,6 @@ void CAbstractCamera::Rotate(const float y, const float p, const float r) {
 	  yaw=glm::radians(y);
 	pitch=glm::radians(p);
 	 roll=glm::radians(r);
+	 
 	Update();
 }

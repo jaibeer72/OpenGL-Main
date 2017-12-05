@@ -15,9 +15,9 @@ void main()
 		color=vec3(0.2,1,0);
 	if(vVertex.y > 0 && vVertex.y <0.7)
 		color=vec3(1,0,0);
-	if(vVertex.y > 0.7 && vVertex.y <1.5)
+	if(vVertex.y > 0.7 && vVertex.y <2.5)
 		color=vec3(1,1,1);
-		if(vVertex.y >1.5)
+		if(vVertex.y >2.5)
 		color=vec3(0.2,0,0);
  // else
 	//color=vec3(1,1,1);
