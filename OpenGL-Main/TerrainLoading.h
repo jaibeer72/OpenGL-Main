@@ -15,15 +15,18 @@ public:
 	void FillVertexBuffer(GLfloat* pBuffer);
 	void FillIndexBuffer(GLuint* pBuffer);
 	void SetCustomUniforms();
-	void SetMax(glm::vec2 trans);
+	void SetMax(const glm::vec2 trans);
 	glm::vec2 Getmax();
-	void SetMin(glm::vec2 trans);
+	void SetMin(const glm::vec2 trans);
 	glm::vec2 GetMin();
 	glm::vec2 getCamPos(glm::vec2 camPos);
 
 private:
 	int width, depth;
 	float xPos, yPos; 
+	float x;
+	float z;
+	float y;
 	const int TOTAL = (width*depth);
 	int seed = 237;
 	float scale = 50;

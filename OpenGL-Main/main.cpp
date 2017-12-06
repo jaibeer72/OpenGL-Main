@@ -49,14 +49,14 @@ void framebuffer_size_callback(GLFWwindow * window, int width, int height)
 //-------------------------------
 //Global Variables
 //---------------------------
-const int Window_Width=500;
-const int Window_Height=500;
+const int Window_Width=1920;
+const int Window_Height=1080;
 const float MOUSE_FILTER_WEIGHT = 0.75f;
 const int MOUSE_HISTORY_BUFFER_SIZE = 10;// ill figure this later
 glm::vec2 mouseHistory[MOUSE_HISTORY_BUFFER_SIZE];
 float mouseX = 0, mouseY = 0;
-const int T_width = 100;
-const int T_depth = 100;
+const int T_width =512;
+const int T_depth = 512;
 //flag to enable filtering
 bool useFiltering = true;
 const char* texture_names[6] = { "skybox/posx.png",
@@ -79,7 +79,7 @@ int state = 0, oldX = 0, oldY = 0;
 float rX = 0, rY = 0, fov = 45;
 //delta time
 float dt = 0;
-
+//bool created = false;
 //timing related variables
 float last_time = 0, current_time = 0;
 
@@ -102,7 +102,7 @@ void main() {
   //GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
 	
 	OGL.CheckWindowWorking(window); 
-	OGL.BasicAntiAlasing();
+	//OGL.BasicAntiAlasing();
 	//glfwSwapInterval(1);
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
@@ -140,10 +140,11 @@ void main() {
 		glm::mat4 S = glm::scale(glm::mat4(1), glm::vec3(1000.0));
 		glm::mat4 MVPS = P*MV*S;
 		renderManager(MVP);
-		skybox->Render(glm::value_ptr(MVPS));
+		//skybox->Render(glm::value_ptr(MVPS));
 		//render the chekered plane
 		//checker_plane->Render(glm::value_ptr(MVP));
-		//Terrain->Render(glm::value_ptr(MVP));
+		
+		
 		//-----------------------------
 		//end code 
 		//------------------------------
@@ -154,9 +155,10 @@ void main() {
 	glDeleteTextures(1, &skyboxTextureID);
 	glfwDestroyWindow(window);
   glfwTerminate();
+ 
   exit(EXIT_SUCCESS);
 }
-
+float x = 3, y = 3;
 void key_callback(GLFWwindow * window, int key, int scancode, int action, int mods)
 {
 	if (GLFW_PRESS==true) {
@@ -253,7 +255,7 @@ void OnInit() {
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	GL_CHECK_ERRORS
-
+		
 		//set the image format
 		GLint format = (channels[0] == 4) ? GL_RGBA : GL_RGB;
 	//load the 6 images
@@ -268,7 +270,7 @@ void OnInit() {
 
 		//setup camera
 		//setup the camera position and look direction
-		glm::vec3 p = glm::vec3(5.0,10.0,1.0);
+		glm::vec3 p = glm::vec3(10.0,10.0,0.0);
 	cam.SetPosition(p);
 	glm::vec3 look = glm::normalize(p);
 	//glm::vec3 trans = cam.GetPosition();
@@ -288,42 +290,27 @@ void OnInit() {
 	std::cout << "Initialization successfull" << std::endl;
 }
 
-glm::vec2 max;
-glm::vec2 min;
-glm::vec3 trans;
 void renderManager(glm::mat4 MVP)
 {
-	  
-	
-	trans = cam.GetPosition();
-	if (created == false) {
+	glm::vec3 trans = cam.GetPosition();
+	if (created==false){
 		
 		Terrain = new TerrainLoading(T_width, T_depth, trans.x, trans.z);
-		// creating bounds 
-		 max= Terrain->Getmax();
-		 min = Terrain->GetMin(); 
 		created = true;
-		std::cout << "is created\n ";
 	}
-	if (created == true) {
-		
-			Terrain->Render(glm::value_ptr(MVP));
-			std::cout << "is Rendered\n ";
-			
-	
-			// checking camera bounds to the plain 
-			if ((trans.x <min.x) || (trans.x > max.x) || (trans.z > max.y) || (trans.z < min.y)) {
-
-				//TerrainLoading* Tchunk2 = new TerrainLoading(T_width, T_depth, trans.x, trans.z);
-				Terrain->Destroy(); 
-				delete Terrain;
-				std::cout << "is Destroyed\n";
-				//Terrain = Tchunk2;
-				//std::cout << "is replaced";
-				created = false; 
-				
-			}
-		}
-	
+	if(created==true) {
+		glm::vec2 max, min;
+		max = Terrain->Getmax();
+		min = Terrain->GetMin();
+		Terrain->Render(glm::value_ptr(MVP));
+		/*if (trans.x > max.x || trans.x < min.x || trans.z<min.y || trans.z>max.y) {
+			TerrainLoading* T2 = new TerrainLoading(T_width, T_depth, trans.x, trans.z);
+			Terrain->Destroy(); 
+			Terrain =T2 ;
+			delete[] T2; 
+			created = false;
+		}*/
+	}
 }
+
 	

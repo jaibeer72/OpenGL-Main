@@ -48,8 +48,9 @@ int TerrainLoading::GetTotalIndices()
 
 GLenum TerrainLoading::GetPrimitiveType()
 {
-	glLineWidth(5.0f);
-	return GL_LINES;
+	//glLineWidth(5.0f);
+	glPointSize(15.0f);
+	return GL_POINTS;
 }
 
 void TerrainLoading::FillVertexBuffer(GLfloat * pBuffer)
@@ -67,24 +68,25 @@ void TerrainLoading::FillVertexBuffer(GLfloat * pBuffer)
 	glm::vec3* vertices = (glm::vec3*)(pBuffer);
 	//setup vertices 
 	int count = 0;
+
 	//fill terrain vertices
 	//glm::vec3 trans = cam1.GetPosition();
 	for (int j = 0; j<depth; j++) {
 		for (int i = 0; i<width; i++) {
-			x = ((float(i)) / (width - 1))*(width/2);
-			z = (float(j)) / (depth - 1)*(depth/2);
+			x = ((float(i)-(width/2) / (width/2 - 1)*(width/2)));
+			z = ((float(j)-(depth/2) / (depth/2 - 1)*(depth/2)));
 			
 			y =20*NG.GetNoise(x, z);
 			
-			vertices[count] = glm::vec3(x-(xPos+(width/4)),y,z-(yPos+(depth/4)));
+			vertices[count] = glm::vec3(x,y,z);
 			count++;
 			if (i == 0 && j == 0) {
-				SetMin(glm::vec2(x - (xPos + (width / 4)), z - (yPos + (depth / 4))));
+				SetMin(glm::vec2(vertices[count].x, vertices[count].z));
 			}
 			//std::cout << "Y CORD OF PLAIN :- " << y << "\n";
 		}
 	}
-	SetMax(glm::vec2(x - (xPos + (width / 4)), z - (yPos + (depth / 4)))); 
+	SetMax(glm::vec2(vertices[count].x, vertices[count].z));
 }
 
 void TerrainLoading::FillIndexBuffer(GLuint * pBuffer)
@@ -112,14 +114,14 @@ void TerrainLoading::SetCustomUniforms()
 
 }
 
-void TerrainLoading::SetMax(glm::vec2 trans)
+void TerrainLoading::SetMax(const glm::vec2 trans)
 {
 	max = trans;
 }
 
 glm::vec2 TerrainLoading::Getmax()
 {
-	return glm::vec2(max);
+	return max;
 }
 
 void TerrainLoading::SetMin(glm::vec2 trans)
@@ -129,7 +131,7 @@ void TerrainLoading::SetMin(glm::vec2 trans)
 
 glm::vec2 TerrainLoading::GetMin()
 {
-	return glm::vec2(min);
+	return min;
 }
 
 glm::vec2 TerrainLoading::getCamPos(glm::vec2 camPos)
