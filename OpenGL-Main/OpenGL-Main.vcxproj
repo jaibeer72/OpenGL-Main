@@ -120,12 +120,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\Desktop\WT Class Code\css\Perlin_Noise\ppm.cpp" />
+    <ClCompile Include="CAbstractCamera.cpp" />
+    <ClCompile Include="CFreeCamera.cpp" />
+    <ClCompile Include="CPlane.cpp" />
+    <ClCompile Include="CSkybox.cpp" />
+    <ClCompile Include="CTexturedPlane.cpp" />
+    <ClCompile Include="FastNoise.cpp" />
     <ClCompile Include="GLSLShader.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="OpenGL-Main.cpp" />
     <ClCompile Include="Premitives2D.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\Desktop\WT Class Code\css\Perlin_Noise\ppm.h" />
+    <ClInclude Include="CAbstractCamera.h" />
+    <ClInclude Include="CFreeCamera.h" />
+    <ClInclude Include="CPlane.h" />
+    <ClInclude Include="CSkybox.h" />
+    <ClInclude Include="CTexturedPlane.h" />
+    <ClInclude Include="FastNoise.h" />
     <ClInclude Include="GLSLShader.h" />
     <ClInclude Include="OpenGL-Main.h" />
     <ClInclude Include="Premitives2D.h" />
@@ -134,6 +148,10 @@
     <None Include="packages.config" />
     <None Include="shader.frag" />
     <None Include="shader.vert" />
+    <None Include="skybox.frag" />
+    <None Include="skybox.vert" />
+    <None Include="Tarrain.frag" />
+    <None Include="Tarrain.vert" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Demos.txt" />

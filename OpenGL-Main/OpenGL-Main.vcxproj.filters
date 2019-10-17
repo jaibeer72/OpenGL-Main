@@ -30,6 +30,36 @@
     <ClCompile Include="GLSLShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CAbstractCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CFreeCamera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CPlane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderableObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CTexturedPlane.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainLoading.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PerlinNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\Desktop\WT Class Code\css\Perlin_Noise\ppm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="FastNoise.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CSkybox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Premitives2D.h">
@@ -41,6 +71,36 @@
     <ClInclude Include="GLSLShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CAbstractCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CFreeCamera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderableObject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTexturedPlane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainLoading.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PerlinNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\Desktop\WT Class Code\css\Perlin_Noise\ppm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FastNoise.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CSkybox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -48,6 +108,33 @@
       <Filter>shaders</Filter>
     </None>
     <None Include="shader.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="rippleMesh.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="rippleMesh.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="shader.geom">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="checker_shader.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="checker_shader.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="Tarrain.frag">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="Tarrain.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="skybox.vert">
+      <Filter>shaders</Filter>
+    </None>
+    <None Include="skybox.frag">
       <Filter>shaders</Filter>
     </None>
   </ItemGroup>
