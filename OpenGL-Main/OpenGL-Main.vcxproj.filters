@@ -30,6 +30,7 @@
     <ClCompile Include="GLSLShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="CAbstractCamera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -60,6 +61,8 @@
     <ClCompile Include="CSkybox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+=======
+>>>>>>> 22e312b4fe88051521d0e646757de75c1643c424
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Premitives2D.h">
@@ -71,6 +74,7 @@
     <ClInclude Include="GLSLShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="CAbstractCamera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -101,6 +105,8 @@
     <ClInclude Include="CSkybox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+=======
+>>>>>>> 22e312b4fe88051521d0e646757de75c1643c424
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -110,6 +116,7 @@
     <None Include="shader.frag">
       <Filter>shaders</Filter>
     </None>
+<<<<<<< HEAD
     <None Include="rippleMesh.frag">
       <Filter>shaders</Filter>
     </None>
@@ -137,6 +144,8 @@
     <None Include="skybox.frag">
       <Filter>shaders</Filter>
     </None>
+=======
+>>>>>>> 22e312b4fe88051521d0e646757de75c1643c424
   </ItemGroup>
   <ItemGroup>
     <Text Include="Demos.txt">
@@ -145,10 +154,5 @@
     <Text Include="ShaderBasedTriange.txt">
       <Filter>Resource Files</Filter>
     </Text>
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\..\..\..\Downloads\heightMap.jpg">
-      <Filter>Resource Files</Filter>
-    </Image>
   </ItemGroup>
 </Project>

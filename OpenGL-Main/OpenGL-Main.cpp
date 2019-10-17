@@ -25,13 +25,7 @@ void OpenGLsetup::CheckWindowWorking(GLFWwindow* window)
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-	glfwMakeContextCurrent(window);
 
-	if (glewInit() != GLEW_OK) {
-		fprintf(stderr, "Fail to Initialize GLEW\n");
-		glfwTerminate();
-		exit(EXIT_FAILURE);
-	}
 }
 
 void OpenGLsetup::BasicAntiAlasing()
@@ -54,17 +48,35 @@ GLFWwindow* OpenGLsetup::Ortho_Projection_Setup(GLFWwindow * window, int width, 
 	glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+   // glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	return window;
 }
 
 GLFWwindow * OpenGLsetup::PrespectiveCamera_Setup(GLFWwindow *window, int width, int height)
 {
-
-	GLfloat alpha = 210.0f, beta = -70.0f, zoom = 2.0f;
-	static GLFWwindow* win = framebuffer_size_callback(window, width, height);
-	window = win; 
 	
+	glfwGetFramebufferSize(window, &width, &height);
+	const float fovY = 45.0f;
+	const float front = 0.1f;
+	const float back = 128.0f;
+	GLfloat alpha = 210.0f, beta = -70.0f, zoom = 2.0f;
+	float ratio = 1.0f;
+	if (height > 0)
+		ratio = (float)width / (float)height;
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	const double DEG2RAD = 3.14159265 / 180;
+  // tangent of half fovY
+  double tangent = tan(fovY/2 * DEG2RAD);  
+  // half height of near plane
+  double height_f = front * tangent;     
+  // half width of near plane
+  double width_f = height_f * ratio;   
+
+  //Create the projection matrix based on the near clipping 
+  //plane and the location of the corners
+  glFrustum(-width_f, width_f, -height_f, height_f, front, back);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   glTranslatef(0.0, 0.0, -2.0);
@@ -74,33 +86,6 @@ GLFWwindow * OpenGLsetup::PrespectiveCamera_Setup(GLFWwindow *window, int width,
   glRotatef(alpha, 0.0, 0.0, 1.0);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-	return window;
-}
-
-GLFWwindow * OpenGLsetup::framebuffer_size_callback(GLFWwindow * window, int width, int height)
-{
-	glfwGetFramebufferSize(window, &width, &height);
-	const float fovY = 45.0f;
-	const float front = 0.1f;
-	const float back = 128.0f;
-	
-	float ratio = 1.0f;
-	if (height > 0)
-		ratio = (float)width / (float)height;
-	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	const double DEG2RAD = M_PI / 180;
-	// tangent of half fovY
-	double tangent = tan(fovY / 2 * DEG2RAD);
-	// half height of near plane
-	double height_f = front * tangent;
-	// half width of near plane
-	double width_f = height_f * ratio;
-
-	//Create the projection matrix based on the near clipping 
-	//plane and the location of the corners
-	glFrustum(-width_f, width_f, -height_f, height_f, front, back);
 	return window;
 }
 

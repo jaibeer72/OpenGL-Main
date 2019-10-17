@@ -1,6 +1,5 @@
 #pragma once
 #include"GLSLShader.h"
-#include"OpenGL-Main.h"
 
 class RenderableObject
 {
@@ -14,6 +13,7 @@ public:
 	virtual GLenum GetPrimitiveType() = 0;
 
 	virtual void FillVertexBuffer(GLfloat* pBuffer) = 0;
+	virtual void FillColorBuffer(GLfloat* pBuffer) = 0;
 	virtual void FillIndexBuffer(GLuint* pBuffer) = 0;
 
 	virtual void SetCustomUniforms() {}

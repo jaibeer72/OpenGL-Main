@@ -24,7 +24,7 @@ void GLSLShader::LoadFromString(GLenum type, const std::string& source) {
 	GLuint shader = glCreateShader(type);
 
 	const char * ptmp = source.c_str();
-	glShaderSource(shader, 1, &ptmp, NULL);
+		
 
 	//check whether the shader loads fine
 	GLint status;
