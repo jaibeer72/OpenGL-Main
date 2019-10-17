@@ -21,6 +21,7 @@ TerrainLoading::TerrainLoading(const int w, const int d,float x, float y)
 	shader.AddUniform("half_scale");
 	shader.AddUniform("HALF_TERRAIN_SIZE");
 	shader.AddUniform("MVP");
+	shader.AddUniform("time");
 	//set values of constant uniforms as initialization	
 	glUniform1i(shader("heightMapTexture"), 0);
 	glUniform2i(shader("HALF_TERRAIN_SIZE"),w>>1,d>>1);
@@ -49,7 +50,7 @@ int TerrainLoading::GetTotalIndices()
 GLenum TerrainLoading::GetPrimitiveType()
 {
 	//glLineWidth(5.0f);
-	glPointSize(15.0f);
+	glPointSize(20.0f);
 	return GL_POINTS;
 }
 
@@ -57,8 +58,9 @@ void TerrainLoading::FillVertexBuffer(GLfloat * pBuffer)
 {
 	//PerlinNoise p(230);
 	FastNoise NG;
-	NG.SetNoiseType(FastNoise::PerlinFractal);
-	//NG.SetSeed(500);
+	NG.SetNoiseType(FastNoise::CubicFractal);
+	NG.SetCellularDistanceFunction(FastNoise::Manhattan);
+	NG.SetSeed(500);
 	NG.SetFractalOctaves(2);
 	NG.SetFrequency(0.01);
 	NG.SetFractalLacunarity(10.0);
@@ -111,7 +113,6 @@ void TerrainLoading::FillIndexBuffer(GLuint * pBuffer)
 
 void TerrainLoading::SetCustomUniforms()
 {
-
 }
 
 void TerrainLoading::SetMax(const glm::vec2 trans)

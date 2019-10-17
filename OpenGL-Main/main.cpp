@@ -56,7 +56,7 @@ const int MOUSE_HISTORY_BUFFER_SIZE = 10;// ill figure this later
 glm::vec2 mouseHistory[MOUSE_HISTORY_BUFFER_SIZE];
 float mouseX = 0, mouseY = 0;
 const int T_width =512;
-const int T_depth = 512;
+const int T_depth =512;
 //flag to enable filtering
 bool useFiltering = true;
 const char* texture_names[6] = { "skybox/posx.png",
@@ -102,7 +102,7 @@ void main() {
   //GLFWwindow* window = OGL.CreateWindow(Window_Width, Window_Height, "This Is a Window Name");
 	
 	OGL.CheckWindowWorking(window); 
-	//OGL.BasicAntiAlasing();
+	OGL.BasicAntiAlasing();
 	//glfwSwapInterval(1);
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
@@ -140,7 +140,7 @@ void main() {
 		glm::mat4 S = glm::scale(glm::mat4(1), glm::vec3(1000.0));
 		glm::mat4 MVPS = P*MV*S;
 		renderManager(MVP);
-		//skybox->Render(glm::value_ptr(MVPS));
+		skybox->Render(glm::value_ptr(MVPS));
 		//render the chekered plane
 		//checker_plane->Render(glm::value_ptr(MVP));
 		
